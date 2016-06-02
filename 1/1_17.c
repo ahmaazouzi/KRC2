@@ -1,3 +1,6 @@
+/*
+This program prints all the lines that are longer than 80 characters.
+*/ 
 #include <stdio.h>
 #define MAXLINE 1000
 #define MAX 80
@@ -12,7 +15,7 @@ int main(){
 
 
   while((len = get_line(line, MAXLINE)) > 0)
-    if (len >= MAX){
+    if (len > MAX){
       copy(longer, line);
       printf("%s\n", longer);
     }

@@ -15,7 +15,6 @@ int main(){
   int c = EOF;
   int i, j;
   int array[MAX - MIN];
-  // dsdsd dsdsdsds
 
   for (i = MIN; i <= MAX; i++){
     array[i] = 0;

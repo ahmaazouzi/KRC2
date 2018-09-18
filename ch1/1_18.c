@@ -13,14 +13,13 @@ int main(){
 
 	while ((len = detrail(line, MAXLINE)) > 0){
 		copy(detrailed_line, line);
-		if (len > 0)
-			printf("%s", detrailed_line);
+		printf("%s", detrailed_line);
 	}		
 	return 0;
 }
 
 int detrail(char s[], int lim){
-	int c, i, trimedge, dudu;
+	int c, i, trimedge, blanklength;
 	int state = OUT;
 
 	trimedge = 0;
@@ -38,24 +37,22 @@ int detrail(char s[], int lim){
 	}
 
 	if (trimedge > 0){
-		dudu = i-trimedge;
+		blanklength = i-trimedge;
 	} else {
-		dudu = i;
+		blanklength = i;
 	}
-		if (c == '\n' && state == OUT){
-		state = OUT;
-		s[dudu] = '\n';
-		++dudu;	
+		if (c == '\n'){
+		s[blanklength] = '\n';
+		++blanklength;	
 	}
 
 	if (s[0] == '\n'){
 		s[0] = 0;
 	}
 
+	s[blanklength] = '\0';
 
-	s[dudu] = '\0';
-
-	return dudu;
+	return blanklength;
 }
 
 void copy(char to[], char from[]){

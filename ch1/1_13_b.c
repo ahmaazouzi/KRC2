@@ -35,7 +35,7 @@ int main(){
       max = wlarray[i];
   }
 
-  printf("\n\n   Word length:\n\n");
+  printf("\n\n   Word length Frequencies:\n\n");
   printf("  |");
   for (i = 0; i <= 10; ++i){
     printf("---");

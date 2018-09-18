@@ -1,4 +1,13 @@
-dddd
-dsdsdsds
-fffffffffff
+###
+aaa#
+aaaa######
+a###
+a#####
+######
+#####
+aa
+####
+#####
+#####
+
 

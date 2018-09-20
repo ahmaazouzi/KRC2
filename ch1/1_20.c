@@ -1,30 +1,29 @@
 #include "stdio.h"
 #define TABSIZE 8
-#define INTAB 0
-#define OUTAB 1
 
 int main(){
-	int c, i, tabstart, state;
+	int c, tabstart, tablength;
 
-	state = OUTAB;
 	tabstart = 1;
-	
+	tablength = 0;
+
 	while ((c = getchar()) != EOF){
-		if (tabstart == 9)
-			tabstart = 1;
-		++tabstart;	
 
 		if (c == '\t'){
-			state = INTAB;
+			while(tablength <= (TABSIZE - tabstart)){
+				putchar(' ');
+				tablength++;
+			}
+			tablength = 0;
+			
+		} else {
+			putchar(c);
 		}
 
-		if (state == INTAB){
-			putchar('#');
-		}
-		if (TABSIZE - tabstart < 1 && state == INTAB){
-			state = OUTAB;
-		}
+		++tabstart;	
 
+		if (tabstart == 8)
+			tabstart = 1;
 	}
 
 	return 0;

@@ -41,7 +41,7 @@ int detrail(char s[], int lim){
 	} else {
 		blanklength = i;
 	}
-		if (c == '\n'){
+	if (c == '\n'){
 		s[blanklength] = '\n';
 		++blanklength;	
 	}

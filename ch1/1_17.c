@@ -3,7 +3,6 @@
 #define MINLINE 80
 
 int get_line(char line[], int maxline);
-void copy(char to[], char from[]);
 
 int main(){
 	int len;

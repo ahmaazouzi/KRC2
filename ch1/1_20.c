@@ -14,8 +14,7 @@ int main(){
 				putchar(' ');
 				tablength++;
 			}
-			tablength = 0;
-			
+			tablength = 0;	
 		} else {
 			putchar(c);
 		}

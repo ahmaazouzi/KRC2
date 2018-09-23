@@ -1,54 +1,47 @@
 #include "stdio.h"
-#define LINEMAXSIZE 40
-#define TABSIZE  8
-#define INWORD  1
-#define OUTWORD 0
+#define MAXLINESIZE 45
 #define MAXWORDSIZE 45
-
-int fold(int blankblock, int state);
-void reblank(int blankblock, int state);
+#define LESSTHANMAX 0
+#define MORETHANMAX 1
 
 int main(){
-	int c,lineLength, wordsize, state, wordchar;
+	int c, wordsize, lineLength, state;
+
 	char word[MAXWORDSIZE];
+	wordsize = 0;
+	state = LESSTHANMAX;
 
-	state = OUTWORD;
-	wordchar = 0;
+
 	lineLength = 0;
-
 	while ((c = getchar()) != EOF){
-		if (c != ' ' && c != '\t' && c != '\n'){
-			if (state == OUTWORD)
-				state = INWORD;
-			word[wordchar] = c;
-			state = INWORD;
-			++wordchar;
-		} else {
-			wordchar = 0;
-			state = OUTWORD;
-		}
-
-		if (lineLength == LINEMAXSIZE){
-			if (wordchar > 0){
-					for (int i = 0; i <= wordchar; ++i)
-					{
-						putchar(word[wordchar]);
-					}
-					wordchar = 0;
-					putchar('\n');
-			} else {
-					putchar('\n');
+		if (c == ' ' || c == '\t' || c == '\n'){
+			if (lineLength >= MAXLINESIZE){
+				c = '\n';
+				// lineLength = 0;
 			}
-			lineLength = 0;
-		}
-		if (c == '\n'){
-			lineLength = 0;
+			if (wordsize > 0){
+				if (state == MORETHANMAX){
+					putchar('\n');
+				}
+				for (int i = 0; i < wordsize; ++i){
+					putchar(word[i]);
+				}
+			}
+			putchar(c);
+			wordsize = 0;
+		} else {
+			if (lineLength >= MAXLINESIZE){
+				state = MORETHANMAX;
+				lineLength = 0;
+			}
+			word[wordsize] = c;
+			++wordsize;
 		}
 
+		if (lineLength < MAXLINESIZE){
+			state = LESSTHANMAX;
+		}
 
-		// putchar(c);
-		++lineLength;
+		++lineLength;	
 	}
-
-	return 0;
 }

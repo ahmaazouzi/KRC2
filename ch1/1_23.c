@@ -5,13 +5,16 @@
 #define STAR       '*'
 #define INCOMMENT  1
 #define OUTCOMMENT 0
-#define NAH        'n'
+#define NAH        '\0'
+#define	NONSLASHED 0
+#define SLASHED	   1
 
 int isInComment(int state);
 int isInString(int state);
 
 int main(){
-	int c, stringState, commentState;
+	int c, stringState, commentState, slashState;
+	slashState = NONSLASHED;
 	char commentStart[2];
 	char commentEnd[2];
 	stringState  = OUTSTRING;
@@ -25,8 +28,14 @@ int main(){
 
 		if (stringState == OUTSTRING){
 			if (commentState == OUTCOMMENT){
-				if (c == SLASH)
+				if (c != STAR && slashState == SLASHED)
+					putchar(SLASH);
+				if (c == SLASH){
 					commentStart[0] = SLASH;
+					slashState = SLASHED;
+				} else {
+					slashState = NONSLASHED;
+				}
 				if (c == STAR)
 					commentStart[1] = STAR;
 			} else if (commentState == INCOMMENT){
@@ -50,10 +59,11 @@ int main(){
 			if (commentState == OUTCOMMENT)
 				if (c != SLASH)
 					putchar(c);
-
+				
 		} else {
 			putchar(c);
 		}
+
 	}
 	return 0;
 }

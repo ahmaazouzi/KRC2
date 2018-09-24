@@ -6,7 +6,7 @@
 
 int main(){
 	int c, wordsize, lineLength, LineEndState;
-	char word[MAXWORDSIZE];
+	char word[MAXWORDSIZE]; /* block of non-black charac*/
 	
 	LineEndState = BEFORELINEEND;
 	wordsize = 0;
@@ -22,7 +22,7 @@ int main(){
 				lineLength = 0;
 				LineEndState = AFTERLINEEND;
 			}
-			else if ( wordsize > 0){
+			else if (wordsize > 0){
 				if (lineLength > MAXLINESIZE){
 					putchar('\n');
 					lineLength = wordsize;

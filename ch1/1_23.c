@@ -47,8 +47,9 @@ int main(){
 			} else if (commentState == INCOMMENT){
 				if (c == STAR)
 					commentEnd[0] = STAR;
-				if (c == SLASH)
+				if (c == SLASH && commentEnd[0] == STAR){
 					commentEnd[1] = SLASH;
+				}
 			}
 
 			if (commentStart[0] == SLASH && commentStart[1] == STAR){
@@ -62,7 +63,6 @@ int main(){
 				commentState = OUTCOMMENT;
 				commentEnd[0] = EMPTY;
 				commentEnd[1] = EMPTY;
-
 			} 
 
 			if (commentState == OUTCOMMENT)

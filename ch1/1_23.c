@@ -5,23 +5,26 @@
 #define STAR       '*'
 #define INCOMMENT  1
 #define OUTCOMMENT 0
-#define NAH        '\0'
+#define EMPTY      '\0'
 #define	NONSLASHED 0
 #define SLASHED	   1
+#define LINEEND    1
+#define NOTLINEEND 0
+#define ENDL       '\n'
 
 int isInComment(int state);
 int isInString(int state);
 
 int main(){
-	int c, stringState, commentState, slashState;
+	int c, stringState, commentState, slashState, lineEndState;
 	slashState = NONSLASHED;
 	char commentStart[2];
 	char commentEnd[2];
 	stringState  = OUTSTRING;
 	commentState = OUTCOMMENT;
+	lineEndState = NOTLINEEND;
 
 	while ((c = getchar()) != EOF){
-
 		if (c == '\"'){
 			stringState = isInString(stringState);
 		}
@@ -38,6 +41,7 @@ int main(){
 				}
 				if (c == STAR)
 					commentStart[1] = STAR;
+
 			} else if (commentState == INCOMMENT){
 				if (c == STAR)
 					commentEnd[0] = STAR;
@@ -46,25 +50,36 @@ int main(){
 			}
 
 			if (commentStart[0] == SLASH && commentStart[1] == STAR){
+				if (lineEndState == LINEEND)
+					putchar(ENDL);
 				commentState = INCOMMENT;
-				commentStart[0] = NAH;
-				commentStart[1] = NAH;
-			} 
-			if (commentEnd[0] == STAR && commentEnd[1] == SLASH){
-				commentState = OUTCOMMENT;
-				commentEnd[0] = NAH;
-				commentEnd[1] = NAH;
+				commentStart[0] = EMPTY;
+				commentStart[1] = EMPTY;
 			} 
 
+			if (commentEnd[0] == STAR && commentEnd[1] == SLASH){
+				commentState = OUTCOMMENT;
+				commentEnd[0] = EMPTY;
+				commentEnd[1] = EMPTY;
+			} 
+
+			if (lineEndState == LINEEND){
+				putchar(ENDL);
+				lineEndState = NOTLINEEND;
+			}
+
 			if (commentState == OUTCOMMENT)
-				if (c != SLASH)
+				if (c != SLASH && c != ENDL)
 					putchar(c);
-				
+
+			if (c == ENDL)
+				lineEndState = LINEEND;	
+
 		} else {
 			putchar(c);
 		}
-
 	}
+
 	return 0;
 }
 

@@ -1,34 +1,47 @@
+/* Check unbalanced parantheses, blanks, braces, quotes.. and comments */
+
 #include "stdio.h"
-#define MAXSYMBS         1000
-#define OPENPARANTHESES  '('
+#include "stdlib.h" /* Not seen yet, but the concept is obvious*/
+#define MAXSYMBS		 1000
+#define OPENPARANTHESES	 '('
 #define CLOSEPARANTHESES ')'
-#define OPENBRACKET      '['
-#define CLOSBRACKET      ']'
-#define OPENBRACE        '{'
-#define CLOSBRACE        '}'
-#define SINGLEQUOTE      '\''
-#define DOUBLEQUOTE      '"'
-#define BSLASHED         1
+#define OPENBRACKET		 '['
+#define CLOSBRACKET		 ']'
+#define OPENBRACE		 '{'
+#define CLOSBRACE 		 '}'
+#define SINGLEQUOTE		 '\''
+#define DOUBLEQUOTE		 '"'
+#define BSLASHED		 1
 #define UNBSLASHED		 0
-#define BSLASH			 '\\'
+#define BSLASH 			 '\\'
 #define LINEEND			 '\n'
 #define SLASH			 '/'
 #define STAR			 '*'
+#define INQUOTE			 1
+#define OUTQUOTE		 0
+#define INCOMMENT		 1
+#define OUTCOMMENT		 0
+
+void getBalanceScore(char s[], int i);
+int deStringify();
+int unComment();
+int handleEscape();
 
 int main(){
-	int c, lineNumber, parantheses, braces, brackets;
-	char i;
+	int c, i, slashState, commentState;
 	char groupers[MAXSYMBS];
 
-	brackets = 0;
-	braces = 0;
-	parantheses = 0;
-	lineNumber = 1;
+	slashState = UNBSLASHED;
+	commentState = OUTCOMMENT;
 	i = 0;
 	while ((c = getchar()) != EOF){
-		if (c == LINEEND){
-			++lineNumber;
-		}
+		if (c == BSLASH)
+			slashState = BSLASHED
+		else
+			slashState = UNBSLASHED;
+
+		c = deStringify(c, slashState);
+		c = unComment(c, commentState)
 
 		if (c == OPENPARANTHESES||c == CLOSEPARANTHESES||
 			c == OPENBRACE ||c == CLOSBRACE||
@@ -40,7 +53,15 @@ int main(){
 	}
 	++i;
 	groupers[i] = '\0';
+	getBalanceScore(groupers, i);
+	return 0;
+}
 
+void getBalanceScore(char groupers[], int i){
+	int parantheses, braces, brackets;
+	brackets = 0;
+	braces = 0;
+	parantheses = 0;
 	for (int t = 0; t <= i; ++t){
 		if (groupers[t] == OPENPARANTHESES)
 			++parantheses;
@@ -56,11 +77,29 @@ int main(){
 			--brackets;
 	}
 
-	if (parantheses < 0)
-			printf("Dude, there is no need for this paranthesis\n");
 	if (parantheses > 0)
-			printf("You added unncessery paranthesis\n");
-
-	return 0;
+		printf("%d missing '%c'\n", parantheses, OPENPARANTHESES);
+	if (parantheses < 0)
+		printf("%d unexpexted '%c'\n", abs(parantheses), CLOSEPARANTHESES);
+	if (brackets < 0)
+		printf("%d missing '%c'\n", brackets, OPENBRACKET);
+	if (brackets > 0)
+		printf("%d unexpexted '%c'\n", abs(brackets), CLOSBRACKET);
+	if (braces < 0)
+		printf("%d missing '%c'\n", braces, OPENBRACE);
+	if (braces > 0)
+		printf("%d unexpexted '%c'\n", abs(braces), CLOSBRACE);
 }
+
+// int deStringify(){
+
+// }
+
+// // int unComment(){
+
+// // }
+
+// // int handleEscape(){
+
+// // }
 

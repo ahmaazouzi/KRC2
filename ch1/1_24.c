@@ -11,12 +11,14 @@
 #define CLOSBRACE        '}'
 #define SINGLEQUOTE      '\''
 #define DOUBLEQUOTE      '"'
-#define BSLASHED         1
-#define UNBSLASHED       0
 #define BSLASH           '\\'
 #define LINEEND          '\n'
 #define SLASH            '/'
 #define STAR             '*'
+#define SLASHED          1
+#define UNSLASHED        0
+#define STARRED          1
+#define UNSTARRED        0
 #define INQUOTE          1
 #define OUTQUOTE         0
 #define INCOMMENT        1
@@ -24,30 +26,41 @@
 #define EMPTY            '\0'
 
 void getBalanceScore(char s[], int i);
-int deStringify(int c);
-// int unComment();
-// int handleEscape();
+int isInQuote(int c, int quoteCommentState);
+int isInComment(int c, int commentState, int slashState, int starState);
 
 int main(){
-    int c, i, bSlashState, commentState, quoteState;
+    int c, i, commentState, quoteState, slashState, starState;
     char groupers[MAXSYMBS];
     // slash by itslef is a syntax error. come back to this
 
-    bSlashState = UNBSLASHED;
     commentState = OUTCOMMENT;
     quoteState = OUTQUOTE;
+    slashState = UNSLASHED;
     i = 0;
     while ((c = getchar()) != EOF){
+        quoteState = isInQuote(c, quoteState);
+        commentState = isInComment(c, commentState, slashState, starState);
 
-        c = deStringify(c);
-        // c = unComment(c, commentState)
+        if (quoteState == OUTQUOTE && commentState == OUTCOMMENT){
+            if (c == OPENPARANTHESES||c == CLOSEPARANTHESES||
+                c == OPENBRACE ||c == CLOSBRACE||
+                c == OPENBRACKET||c == CLOSBRACKET){
+                groupers[i] = c;
+                ++i;
+            } 
+        } 
 
-        if (c == OPENPARANTHESES||c == CLOSEPARANTHESES||
-            c == OPENBRACE ||c == CLOSBRACE||
-            c == OPENBRACKET||c == CLOSBRACKET){
-            groupers[i] = c;
-            ++i;
-        }  
+        if (c == SLASH)
+            slashState = SLASHED;
+        else {
+            slashState = UNSLASHED;
+        }
+        if (c == STAR)
+            starState = STARRED;
+        else {
+            starState = UNSTARRED;
+        }
     }
     ++i;
     groupers[i] = EMPTY;
@@ -67,46 +80,63 @@ void getBalanceScore(char groupers[], int i){
             ++brackets;
         if (groupers[t] == OPENBRACE)
             ++braces;
-        if (groupers[t] == CLOSEPARANTHESES)
+        if (groupers[t] == CLOSEPARANTHESES){
             --parantheses;
-        if (groupers[t] == CLOSBRACE)
+            if (parantheses < 0){
+                printf("%d unexpexted '%c'\n", abs(parantheses), CLOSEPARANTHESES);
+                parantheses = 0;
+            }
+        }
+        if (groupers[t] == CLOSBRACE){
             --braces;
-        if (groupers[t] == CLOSBRACKET)
+            if (braces < 0){
+                printf("%d unexpexted '%c'\n", abs(braces), CLOSBRACE);
+                braces = 0;
+            }
+        }
+        if (groupers[t] == CLOSBRACKET){
             --brackets;
+            if (brackets < 0){
+                printf("%d unexpexted '%c'\n", abs(brackets), CLOSBRACKET);
+                brackets = 0;
+            }
+        }
     }
 
     if (parantheses > 0)
         printf("%d missing '%c'\n", parantheses, OPENPARANTHESES);
-    if (parantheses < 0)
-        printf("%d unexpexted '%c'\n", abs(parantheses), CLOSEPARANTHESES);
-    if (brackets < 0)
-        printf("%d missing '%c'\n", brackets, OPENBRACKET);
     if (brackets > 0)
-        printf("%d unexpexted '%c'\n", abs(brackets), CLOSBRACKET);
-    if (braces < 0)
-        printf("%d missing '%c'\n", braces, OPENBRACE);
+        printf("%d missing '%c'\n", brackets, OPENBRACKET);
     if (braces > 0)
-        printf("%d unexpexted '%c'\n", abs(braces), CLOSBRACE);
+        printf("%d missing '%c'\n", braces, OPENBRACE);
 }
 
-int deStringify(int c){
-    int quoteState;
-    quoteState = INQUOTE;
-    // if (c == DOUBLEQUOTE && quoteState == OUTQUOTE)
-    //     quoteState = INQUOTE;
-    // if (c == DOUBLEQUOTE && quoteState == INQUOTE)
-    //         quoteState = OUTQUOTE;
-    if (quoteState == INQUOTE)
-        c = '2'; 
-    printf("%c\n", c);
-    return c;
+int isInQuote(int c, int quoteState){
+    if (c == DOUBLEQUOTE){
+        if (quoteState == OUTQUOTE){
+            quoteState = INQUOTE;
+        } 
+        else {
+            quoteState = OUTQUOTE;
+        }
+    }
+    
+    return quoteState;
 }
 
-// // int unComment(){
+int isInComment(int c, int commentState, int slashState, int starState){
+    if (c == STAR && slashState == SLASHED){
+        if (commentState == OUTCOMMENT){
+            commentState = INCOMMENT;
+        } 
+    }
 
-// // }
+    if (c == SLASH && starState == STARRED){
+        if (commentState == INCOMMENT){
+            commentState = OUTCOMMENT;
+        } 
+    }
 
-// // int handleEscape(){
-
-// // }
+    return commentState;
+}
 

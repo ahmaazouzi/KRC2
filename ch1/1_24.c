@@ -30,7 +30,6 @@
 #define OUTCOMMENT       0
 #define EMPTY            '\0'
 
-void getBalanceScore(char s[], int i);
 void getUnbalanced(char groupers[], int i);
 int isInQuote(int c, int quoteCommentState);
 int isInComment(int c, int commentState, int slashState, int starState);
@@ -47,18 +46,20 @@ int main(){
     sQuoteState = OUTSQUOTE;
     i = 0;
     while ((c = getchar()) != EOF){
-        // quoteState = isInQuote(c, quoteState);
-        // commentState = isInComment(c, commentState, slashState, starState);
-        // sQuoteState = isInSQuote(c, sQuoteState);
+        quoteState = isInQuote(c, quoteState);
+        commentState = isInComment(c, commentState, slashState, starState);
+        sQuoteState = isInSQuote(c, sQuoteState);
 
-        // if (quoteState == OUTQUOTE && commentState == OUTCOMMENT && sQuoteState == OUTSQUOTE){
-            if (c == OPENPARANTHESES||c == CLOSEPARANTHESES||
-                c == OPENBRACE ||c == CLOSBRACE||
-                c == OPENBRACKET||c == CLOSBRACKET){
-                groupers[i] = c;
-                ++i;
-            } 
-        // } 
+        if (quoteState == INQUOTE && commentState == INCOMMENT && sQuoteState == INSQUOTE){
+            c = EMPTY;
+        }
+
+        if (c == OPENPARANTHESES||c == CLOSEPARANTHESES||
+            c == OPENBRACE ||c == CLOSBRACE||
+            c == OPENBRACKET||c == CLOSBRACKET){
+            groupers[i] = c;
+            ++i;
+        } 
 
         if (c == SLASH)
             slashState = SLASHED;
@@ -73,8 +74,6 @@ int main(){
     }
     ++i;
     groupers[i] = EMPTY;
-
-    // getBalanceScore(groupers, i);
     getUnbalanced(groupers, i);
 
     return 0;
@@ -82,15 +81,13 @@ int main(){
 
 void getUnbalanced(char groupers[], int i){
     int s, sym;
-    char arrayHead;
     char symbArray[MAXSYMBS];
-    arrayHead = '\0';
     sym = 0 ;
+
     for (s = 0; s <= i; ++s){
         if (groupers[s] == OPENPARANTHESES || groupers[s] == OPENBRACKET ||
         groupers[s] == OPENBRACE){
             symbArray[sym] = groupers[s];
-            arrayHead = groupers[s];
             ++sym;
         }
 
@@ -99,7 +96,7 @@ void getUnbalanced(char groupers[], int i){
                 --sym;
             }
             else if (sym > 0){
-                printf("unexpectted %c\n", groupers[s]);
+                printf("Unexpectted %c was encountered\n", groupers[s]);
                 if (sym > 0)
                     --sym;    
             }
@@ -110,7 +107,7 @@ void getUnbalanced(char groupers[], int i){
                 --sym;
             }
             else {
-                printf("unexpectted %c\n", groupers[s]);
+                printf("Unexpectted %c was encountered\n", groupers[s]);
                 if (sym > 0)
                     --sym;    
             }
@@ -121,7 +118,7 @@ void getUnbalanced(char groupers[], int i){
                 --sym;
             }
             else {
-                printf("unexpectted %c\n", groupers[s]);
+                printf("Unexpectted %c was encountered\n", groupers[s]);
                 if (sym > 0)
                     --sym;  
             }
@@ -132,49 +129,6 @@ void getUnbalanced(char groupers[], int i){
         for (s = 0; s < sym; ++s)
             printf("A symbol corresponding to %c is missing.\n", symbArray[s]);
     }
-}
-
-void getBalanceScore(char groupers[], int i){
-    int parantheses, braces, brackets;
-    brackets = 0;
-    braces = 0;
-    parantheses = 0;
-    for (int t = 0; t <= i; ++t){
-        if (groupers[t] == OPENPARANTHESES)
-            ++parantheses;
-        if (groupers[t] == OPENBRACKET)
-            ++brackets;
-        if (groupers[t] == OPENBRACE)
-            ++braces;
-        if (groupers[t] == CLOSEPARANTHESES){
-            --parantheses;
-            if (parantheses < 0){
-                printf("%d unexpexted '%c'\n", abs(parantheses), CLOSEPARANTHESES);
-                parantheses = 0;
-            }
-        }
-        if (groupers[t] == CLOSBRACE){
-            --braces;
-            if (braces < 0){
-                printf("%d unexpexted '%c'\n", abs(braces), CLOSBRACE);
-                braces = 0;
-            }
-        }
-        if (groupers[t] == CLOSBRACKET){
-            --brackets;
-            if (brackets < 0){
-                printf("%d unexpexted '%c'\n", abs(brackets), CLOSBRACKET);
-                brackets = 0;
-            }
-        }
-    }
-
-    if (parantheses > 0)
-        printf("%d missing '%c'\n", parantheses, OPENPARANTHESES);
-    if (brackets > 0)
-        printf("%d missing '%c'\n", brackets, OPENBRACKET);
-    if (braces > 0)
-        printf("%d missing '%c'\n", braces, OPENBRACE);
 }
 
 int isInQuote(int c, int quoteState){

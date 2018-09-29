@@ -95,7 +95,7 @@ void getUnbalanced(char groupers[], int i){
             if (symbArray[sym - 1] == OPENPARANTHESES && sym > 0){
                 --sym;
             }
-            else if (sym > 0){
+            else {
                 printf("Unexpectted %c was encountered\n", groupers[s]);
                 if (sym > 0)
                     --sym;    

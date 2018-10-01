@@ -3,27 +3,27 @@
 
 int atoi(char s[]);
 int main(){
-	printf("%d\n", atoi("FF"));
+	printf("%d\n", atoi("0xf0"));
 	return 0;
 }
 
 int atoi(char s[]){
 	int n, i, z, x;
-	// x = 0;
+	x = 0;
 
-	// if (s[0] == '0' && (s[1] == 'x' || s[1] == 'X')){
-	// 	x = 2;
-	// }
+	if (s[0] == '0' && (s[1] == 'x' || s[1] == 'X')){
+		x = 2;
+	}
 
 	n = 0;
-	for (i = 0; (s[i] >= '0' && s[i] <= '9') ||
+	for (i = x; (s[i] >= '0' && s[i] <= '9') ||
 		(s[i] >= 'A' && s[i] <= 'F') ||
 		(s[i] >= 'a' && s[i] <= 'f')
 		; ++i) 
 	{
 		if (s[i] >= '0' && s[i] <= '9')
 			z = (s[i] - '0');
-		else if (s[i] >= 'A' && s[i] <= 'F'){
+		else {
 			if (s[i] == 'A' || s[i] == 'a')
 				z = 10;
 			if (s[i] == 'B' || s[i] == 'b')

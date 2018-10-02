@@ -3,7 +3,7 @@
 
 int atoi(char s[]);
 int main(){
-	printf("%d\n", atoi("0xf0"));
+	printf("%d\n", atoi("f0"));
 	return 0;
 }
 
@@ -37,6 +37,7 @@ int atoi(char s[]){
 			if (s[i] == 'F' || s[i] == 'f')
 				z = 15;
 		}
+
 		n = 16 * n + z;
 	}
 	return n;

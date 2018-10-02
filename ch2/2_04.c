@@ -11,7 +11,6 @@ void squeeze(char s[], char z[]);
 void squzzo(char s[], int c);
 int main(){
 	char s[1000] = "BaaaaakaaffffXaZ";
-
 	squeeze(s, "abakaffffaZ");
 	printf("%s\n", s);
 }

@@ -1,30 +1,31 @@
 #include "stdio.h"
 #include <string.h>
 
-void itob(int n, char s[], int b);
 void reverse(char s[]);
+void itoa(char n, char s[], char f);
 int main(){
-	char z[300];
-	itob(-255, z, 16);
-	printf("%s\n", z);
+	char s[300];
+	itoa(-12, s, 4);
+	printf("%s\n", s);
 	return 0;
 }
 
-void itob(int n, char s[], int b){
-	char v[300] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+void itoa(char n, char s[], char f){
 	int i, sign;
 
 	if ((sign = n) < 0)
 		n = -n;
-
 	i = 0;
 	do {
-		s[i++] = v[(n % b)];
-	} while ((n /= b) > 0);
-
+		s[i++] = n % 10 + '0';
+	} while ((n /= 10) > 0);
 	if (sign < 0)
 		s[i++] = '-';
 	s[i] = '\0';
+		
+	while (f > strlen(s))
+		s[i++] = ' ';
+	
 	reverse(s);
 }
 

@@ -1,4 +1,5 @@
 /* This looks very very bad */
+
 #include "stdio.h"
 
 int atoi(char s[]);

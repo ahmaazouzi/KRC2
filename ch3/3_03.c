@@ -12,7 +12,7 @@
 void expand(char s1[], char s2[]);
 int main(){
 	char s2[1000];
-	expand("a-b-c", s2);
+	expand("A-Z", s2);
 	printf("%s\n", s2);
 	return 0;
 }
@@ -42,7 +42,7 @@ void expand(char s1[], char s2[]){
 					j++;
 				}
 			}
-			
+
 			end = 0;
 			symbol = 0;
 			if (s1[i+1] == '-'){

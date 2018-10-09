@@ -1,7 +1,6 @@
 #include "stdio.h"
 
 int strrindex(char s[], char t[]);
-int strrindex(char s[], char t[]);
 int main(){
 
 	printf("%d\n", strrindex("ahmedaa aaa aa aaa", "aaa"));

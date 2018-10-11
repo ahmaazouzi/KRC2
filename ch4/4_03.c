@@ -48,6 +48,15 @@ int main(){
 			op2 = pop();
 			push((long) pop() % (long) op2);
 			break;
+		case ('e'):
+			push(exp(pop()));
+			break;
+		case ('^'):
+			push(pow(pop(), pop()));
+			break;
+		case ('s'):
+			push(sin(pop()));
+			break;
 		case '\n':
 			printf("\t%.8g\n", pop());
 			break;

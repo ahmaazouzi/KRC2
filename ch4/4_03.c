@@ -8,6 +8,10 @@
 int getop(char []);
 void push(double);
 double pop(void);
+void printstacktop(void);
+void swap(void);
+void duplicatetop(void);
+void clearstack(void);
 
 int main(){
 	int type;
@@ -20,6 +24,10 @@ int main(){
 			push(atof(s));
 			break;
 		case '+':
+			printstacktop();
+			swap();
+			duplicatetop();
+			clearstack();
 			push(pop() + pop());
 			break;
 		case '*':
@@ -71,6 +79,35 @@ double pop(void){
 		printf("error: stack empty\n");
 		return 0.0;
 	}
+}
+
+void duplicatetop(void){
+	double duplicate = val[sp - 1];
+	if (sp < MAXVAL)	
+		val[sp++] = duplicate;
+	else
+		printf("error: stack full, can't duplicate %g\n", val[sp-1]);
+}
+
+void printstacktop(void){
+	if (sp > 0)
+		printf("Top of stack is: %g\n", val[sp - 1]);
+	else
+		printf("stack empty\n");
+}
+
+void swap(void){
+	int temp;
+	if (sp >= 2){
+		temp = val[sp - 1];
+		val[sp -1] = val[sp - 2];
+		val[sp - 2] = temp;
+	}
+}
+
+void clearstack(void){
+	while (sp > 0)
+		val[--sp] = '\0';
 }
 
 #include <ctype.h>

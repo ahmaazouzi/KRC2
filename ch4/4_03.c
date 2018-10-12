@@ -12,6 +12,7 @@ void printstacktop(void);
 void swap(void);
 void duplicatetop(void);
 void clearstack(void);
+void ungets(char []);
 
 int main(){
 	int type;
@@ -24,10 +25,10 @@ int main(){
 			push(atof(s));
 			break;
 		case '+':
-			printstacktop();
-			swap();
-			duplicatetop();
-			clearstack();
+			// printstacktop();
+			// swap();
+			// duplicatetop();
+			// clearstack();
 			push(pop() + pop());
 			break;
 		case '*':
@@ -140,8 +141,11 @@ int getop(char s[]){
 		while (isdigit(s[++i] = c = getch()))
 			;
 	s[i] = '\0';
-	if (c != EOF)
-		ungetch(c);
+	// if (c != EOF)
+	// 	ungetch(c);
+
+	if (c != EOF && c == '\0')
+		ungets(s);
 	return NUMBER;
 }
 
@@ -154,9 +158,18 @@ int getch(void){
 	return (bufp > 0) ? buf[--bufp]: getchar();
 }
 
-void ungetch(int c){
+void ungetch(int c){  
 	if (bufp >= BUFFSIZE)
 		printf("ungetch: too many characters\n");
 	else
 		buf[bufp++] = c;
+}
+
+void ungets(char s[]){
+	int z = 0;
+	if (bufp >= BUFFSIZE)
+		printf("ungetch: too many characters\n");
+	else
+		while(s[z] != '\0')
+			buf[bufp++] = s[z++];
 }

@@ -13,6 +13,8 @@ void swap(void);
 void duplicatetop(void);
 void clearstack(void);
 void ungets(char []);
+int getch2(void);
+void ungetch2(int);
 
 int main(){
 	int type;
@@ -122,30 +124,30 @@ void clearstack(void){
 
 #include <ctype.h>
 
-int getch(void);
-void ungetch(int);
+// int getch(void);
+// void ungetch(int);
 
 int getop(char s[]){
 	int i, c;
 
-	while ((s[0] = c = getch()) == ' ' || c == '\t')
+	while ((s[0] = c = getch2()) == ' ' || c == '\t')
 		;
 	s[1] = '\0';
 	if (!isdigit(c) && c != '.')
 		return c;
 	i = 0;
 	if (isdigit(c))
-		while (isdigit(s[++i] = c = getch()))
+		while (isdigit(s[++i] = c = getch2()))
 			;
 	if (c == '.')
-		while (isdigit(s[++i] = c = getch()))
+		while (isdigit(s[++i] = c = getch2()))
 			;
 	s[i] = '\0';
-	// if (c != EOF)
-	// 	ungetch(c);
+	if (c != EOF)
+		ungetch2(c);
 
-	if (c != EOF && c == '\0')
-		ungets(s);
+	// if (c != EOF && c == '\0')
+	// 	ungets(s);
 	return NUMBER;
 }
 
@@ -154,16 +156,16 @@ int getop(char s[]){
 char buf[BUFFSIZE];
 int bufp = 0;
 
-int getch(void){
-	return (bufp > 0) ? buf[--bufp]: getchar();
-}
+// int getch(void){
+// 	return (bufp > 0) ? buf[--bufp]: getchar();
+// }
 
-void ungetch(int c){  
-	if (bufp >= BUFFSIZE)
-		printf("ungetch: too many characters\n");
-	else
-		buf[bufp++] = c;
-}
+// void ungetch(int c){  
+// 	if (bufp >= BUFFSIZE)
+// 		printf("ungetch: too many characters\n");
+// 	else
+// 		buf[bufp++] = c;
+// }
 
 void ungets(char s[]){
 	int z = 0;
@@ -172,4 +174,18 @@ void ungets(char s[]){
 	else
 		while(s[z] != '\0')
 			buf[bufp++] = s[z++];
+}
+
+int buffelement = '\0';
+
+int getch2(void){
+	int elem;
+	if (buffelement != '\0') elem = buffelement;
+	else elem = getchar();
+	buffelement = '\0';
+	return elem;
+}
+
+void ungetch2(int c){  
+		buffelement = c;
 }

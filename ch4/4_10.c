@@ -4,30 +4,33 @@
 
 #define MAXOP 100
 #define NUMBER '0'
-#define OUTNUMBER 0
-#define INNUMBER 1
 
-
-int getop(char [], char []);
+int getop(char []);
 void push(double);
 double pop(void);
 void printstacktop(void);
 void swap(void);
 void duplicatetop(void);
 void clearstack(void);
-int get_line(char [], int);
+void ungets(char []);
+int getch2(void);
+void ungetch2(int);
+
+int get_line(char line[], int maxline);
 
 int main(){
-	int type, len;
+	int type;
 	double op2;
 	char s[MAXOP];
-	char v[MAXOP];
 
-	while ((len = get_line(s, MAXOP)) > 0){
-		while ((type = getop(s, v)) != EOF){
+	int len;
+	char line[MAXOP];
+
+	while ((len = get_line(line, MAXOP)) > 0){
+		while ((type = getop(s)) != '\0'){
 			switch(type){
 			case NUMBER:
-				push(atof(v));
+				push(atof(s));
 				break;
 			case '+':
 				// printstacktop();
@@ -128,70 +131,73 @@ void clearstack(void){
 
 #include <ctype.h>
 
-int getch(void);
-void ungetch(int);
+// int getch(void);
+// void ungetch(int);
 
-// int getop(char s[]){
-// 	int i, c;
+int getop(char s[]){
+	int i, c;
 
-// 	while ((s[0] = c = getch()) == ' ' || c == '\t')
-// 		;
-// 	s[1] = '\0';
-// 	if (!isdigit(c) && c != '.')
-// 		return c;
-// 	i = 0;
-// 	if (isdigit(c))
-// 		while (isdigit(s[++i] = c = getch()))
-// 			;
-// 	if (c == '.')
-// 		while (isdigit(s[++i] = c = getch()))
-// 			;
-// 	s[i] = '\0';
-// 	if (c != EOF)
-// 		ungetch(c);
+	while ((s[0] = c = getch2()) == ' ' || c == '\t')
+		;
+	s[1] = '\0';
+	if (!isdigit(c) && c != '.')
+		return c;
+	i = 0;
+	if (isdigit(c))
+		while (isdigit(s[++i] = c = getch2()))
+			;
+	if (c == '.')
+		while (isdigit(s[++i] = c = getch2()))
+			;
+	s[i] = '\0';
+	if (c != EOF)
+		ungetch2(c);
 
-// 	return NUMBER;
-// }
+	// if (c != EOF && c == '\0')
+	// 	ungets(s);
+	return NUMBER;
+}
 
 #define BUFFSIZE 100
 
 char buf[BUFFSIZE];
 int bufp = 0;
 
-int getch(void){
-	return (bufp > 0) ? buf[--bufp]: getchar();
-}
+// int getch(void){
+// 	return (bufp > 0) ? buf[--bufp]: getchar();
+// }
 
-void ungetch(int c){  
+// void ungetch(int c){  
+// 	if (bufp >= BUFFSIZE)
+// 		printf("ungetch: too many characters\n");
+// 	else
+// 		buf[bufp++] = c;
+// }
+
+void ungets(char s[]){
+	int z = 0;
 	if (bufp >= BUFFSIZE)
 		printf("ungetch: too many characters\n");
 	else
-		buf[bufp++] = c;
+		while(s[z] != '\0')
+			buf[bufp++] = s[z++];
 }
 
-int getop(char s[], char v[]){
-	int i, c, j;
-	j = 0;
+int buffelement = '\0';
 
-	while ((s[0] = c = getch()) == ' ' || c == '\t')
-		;
-	if (!isdigit(c) && c != '.')
-		return c;
-	if (isdigit(c))
-		while (isdigit(s[i])){
-			s[i] = v[j];
-			i++;
-			j++;
-		}
-
-	if (c == '.')
-		while (isdigit(s[i])){
-			s[i] = v[j];
-			i++;
-			j++;
-		}
-	return NUMBER;
+int getch2(void){
+	int elem;
+	if (buffelement != '\0') elem = buffelement;
+	else elem = getchar();
+	buffelement = '\0';
+	return elem;
 }
+
+void ungetch2(int c){  
+		buffelement = c;
+}
+
+
 
 int get_line(char s[], int lim){
 	int c, i;

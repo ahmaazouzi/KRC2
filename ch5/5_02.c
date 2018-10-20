@@ -1,3 +1,7 @@
+/* Assuming that a float is a whole a number.
+ * All integers are whole numbers
+ * So intgers will also be grabbed.
+ */
 #include <stdio.h>
 #include <ctype.h>
 
@@ -6,34 +10,31 @@
 double getfloat(double *);
 
 int main(){
-	int n, array[SIZE], ge(int *);
-	int val;
+	double array[SIZE], getfloat(double *);
+	double val;
 
 	for (int i = 0; i < SIZE; i++){
-		array[i] = 666;
+		array[i] = 0.0;
 	} 
 
-	for (int i = 0; i < SIZE && (val = getint(&array[i])) != EOF; i++){
+	for (int i = 0; i < SIZE && (val = getfloat(&array[i])) != EOF; i++){
 		;
 	}
 
 	for (int i = 0; i < SIZE; i++){
-		printf("%d ", array[i]);
+		printf("%2.2f ", array[i]);
 	} 
 	printf("\n");
-
-
-
 
 	return 0;
 }
 
-double getch(void);
-void ungetch(double);
+int getch(void);
+void ungetch(int);
 
 double getfloat(double *np){
-	double val, power, c;
-	int sign;
+	double val, power;
+	int sign, c;
 
 	while (isspace(c = getch()))
 		;
@@ -65,11 +66,11 @@ double getfloat(double *np){
 char buf[BUFFSIZE];
 int bufp = 0;
 
-double getch(void){
+int getch(void){
 	return (bufp > 0) ? buf[--bufp]: getchar();
 }
 
-void ungetch(double c){  
+void ungetch(int c){  
 	if (bufp >= BUFFSIZE)
 		printf("ungetch: too many characters\n");
 	else

@@ -1,23 +1,18 @@
 #include <stdio.h>
-#define ALLOCSIZE 10000
+
+void strcatt(char *, char *);
 
 int main(){
+	char s[] = "z";
+	char t[] = "ddd";
+	strcatt(s,t);
+	printf("%s\n", s);
 	return 0;
 }
 
-static char allocbuf[ALLOCSIZE];
-static char *allocp = allocbuf;
-
-char *alloc(int n){
-	if (allocbuf + ALLOCSIZE - allocp >= n){
-		allocp += n;
-		return allocp - n;
-	} else
-		return 0;
+void strcatt(char *s, char *t){
+	while (*s)
+		s++;
+	while ((*s++ = *t++))
+		;
 }
-
-void afree(char *p){
-	if (p >= allocbuf && p < allocbuf + ALLOCSIZE)
-		allocp = p;
-}
-

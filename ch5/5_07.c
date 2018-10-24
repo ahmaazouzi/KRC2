@@ -30,7 +30,7 @@ char *alloc(int);
 
 int readlines(char *lineptr[], int maxlines, char lineread[]){
 	int len, nlines;
-	char *p, line[MAXLEN];
+	char line[MAXLEN];
 
 	nlines = 0;
 	while ((len = get_line(line, MAXLEN)) > 0)
@@ -40,6 +40,7 @@ int readlines(char *lineptr[], int maxlines, char lineread[]){
 			line[len - 1] = '\0';
 			strcpy(lineread, line);
 			lineptr[nlines++] = lineread;
+			lineread += len;
 		}
 	return nlines;
 }

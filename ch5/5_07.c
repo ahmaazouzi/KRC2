@@ -29,18 +29,20 @@ int get_line(char *, int);
 char *alloc(int);
 
 int readlines(char *lineptr[], int maxlines, char lineread[]){
-	int len, nlines;
+	int len, nlines, accumulen;
 	char line[MAXLEN];
 
 	nlines = 0;
 	while ((len = get_line(line, MAXLEN)) > 0)
-		if (nlines >= maxlines || len > MAXLEN)
+		if (nlines >= maxlines ||  accumulen > MAXLEN)
 			return -1;
 		else {
 			line[len - 1] = '\0';
 			strcpy(lineread, line);
 			lineptr[nlines++] = lineread;
 			lineread += len;
+			accumulen += len;
+			printf("acc: %d, len: %d\n", accumulen, len);
 		}
 	return nlines;
 }

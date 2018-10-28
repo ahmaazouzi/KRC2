@@ -3,10 +3,12 @@
 #include <ctype.h>
 
 #define MAXLINE 1000
+#define OPERATION 1
+#define NOOPERATION 0
 
 
 int main(int argc, char *argv[]){
-	int numnum, ind;
+	int numnum, ind, operations;
 	char *first, *second, *third;
 
 	char *opstack[100];
@@ -19,6 +21,7 @@ int main(int argc, char *argv[]){
 			argv[i] = "z";
 			ind = i;
 			numnum = 0;
+			operations = 0;
 			while (ind > 0){
 				if (isdigit(argv[ind][0]) && (numnum == 0)){
 					third = argv[ind];
@@ -26,7 +29,7 @@ int main(int argc, char *argv[]){
 					numnum++;
 				}
 
-				else if (isdigit(argv[ind][0]) && (numnum == 1)){
+				else if (numnum == 1 && isdigit(argv[ind][0]) && operations == 0){
 						first = argv[ind];
 						argv[ind--] = "z";
 						numnum++;
@@ -35,22 +38,23 @@ int main(int argc, char *argv[]){
 				}
 			}
 
-			if (numnum > 1){
-				opstack[opindex++] = first;
-				opstack[opindex++] = second;
+			printf("numa %d\n", numnum);
+
+			if (numnum == 2 && operations == 0){
 				opstack[opindex++] = third;
+				opstack[opindex++] = second;
+				opstack[opindex++] = first;
+				operations++;
 			}
 
+			if (operations > 0){
+					opstack[opindex++] = second;
+					operations--;	
+			}
 
 		}
 			
 	}
-
-	for (int i = 0; i < argc; i++){
-		printf("%s ", argv[i]);
-	}
-	printf("\n");
-
 
 	for (int i = 0; i < opindex; i++){
 		printf("%s ", opstack[i]);

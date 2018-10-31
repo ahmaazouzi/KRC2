@@ -2,27 +2,22 @@
 #define TABSIZE 8
 
 int main(){
-	int c, tabstart, tablength;
+	int c, tablength;
 
-	tabstart = 1;
 	tablength = 0;
 
 	while ((c = getchar()) != EOF){
 
 		if (c == '\t'){
-			while(tablength <= (TABSIZE - tabstart)){
-				putchar(' ');
+			while(tablength < TABSIZE){
+				putchar('#');
 				tablength++;
 			}
 			tablength = 0;	
 		} else {
 			putchar(c);
-		}
-
-		++tabstart;	
-
-		if (tabstart == 8)
-			tabstart = 1;
+			tablength++;
+		}	
 	}
 
 	return 0;

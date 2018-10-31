@@ -47,7 +47,7 @@ void expr(char *argv[], int argc){
 		 		if (argv[i][0] == '+' || argv[i][0] == '-')
 		 			strcat(buff, ")");
 		 	}
-		 	strcpy((argv[i] = malloc(sizeof(100))) ,buff); //argv[i] = buff;
+		 	strcpy((argv[i] = malloc(sizeof(100))) ,buff);
 		 	strcpy(buff, "");
 		 	break;
 		}

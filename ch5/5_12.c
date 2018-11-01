@@ -15,37 +15,49 @@
 #define TABSIZE 8
 
 int main(int argc, char *argv[]){
-	int c, tablength, tab, tabstop, columnnumf, columnnum, startatf, startatf, flagella;
+	int c, tablength, tab, tabstop, columnnumf;
+	int columnnum, startatf, startat, flagella, charcount;
 
-	tablength = columnnum = columnnumf = startatf = startat = flagella = 0;
+	tablength = columnnum = columnnumf = startatf = startat = flagella = charcount = 0;
 
 	tabstop = TABSIZE;
-	
+
 	while (--argc > 0 && (*++argv)[0]){
-		if ((*argv)[0] == '-' )
-			startatf = 1
-		if ((*argv)[0] == '+')
-			tabstop  =  atoi(*argv);
+		if ((*argv)[0] == '-' && (*argv)[1] == 'm') 
+			startatf = 1;
+		if ((*argv)[0] == '+' && (*argv)[1] == 'n'){
+			columnnumf = 1;
+			break;
+		}
 	}
 
-	printf("%d\n", tabstop);
-	printf("%d\n", startat);
+	if (startatf &&  columnnumf)
+		flagella = 1;
 
+	if (flagella)
+		tabstop = columnnum;
+	if (argc > 1){
+		startat = atoi(*++argv);
+		columnnum = atoi(*++argv);	
+	}
 
-	// while ((c = getchar()) != EOF){
+	while ((c = getchar()) != EOF){
+		++charcount;
 
-	// 	if (c == '\t'){
-	// 		tabstop = ((--argc > 0 && isdigit((*++argv)[0])) ? atoi(*argv) : TABSIZE);
-	// 		while(tablength < tabstop) {
-	// 			putchar('#');
-	// 			tablength++;
-	// 		}
-	// 		tablength = 0;	
-	// 	} else {
-	// 		putchar(c);
-	// 		tablength++;
-	// 	}	
-	// }
+		if (argc > 1 && charcount >= startat)
+			tabstop = columnnum;
+
+		if (c == '\t'){
+			while(tablength < tabstop) {
+				putchar(' ');
+				tablength++;
+			}
+			tablength = 0;	
+		} else {
+			putchar(c);
+			tablength++;
+		}	
+	}
 
 	return 0;
 }

@@ -1,4 +1,4 @@
-/* The plan was to outsource error checking to an validation
+/* The plan was to outsource error checking to a validation
  * function that handles both functions, but since the avalidation
  * occurs at multiple stages, it would be wasteful to either allow 
  * any of the functions to keep running until all possible errors are

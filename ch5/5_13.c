@@ -37,8 +37,8 @@ int readlines(char *lineptr[], int maxlines){
 
 	nlines = 0;
 	while ((len = get_line(line, MAXLEN)) > 0){
-		if (nlines > TAIL)
-			afree(p - (MAXLINES * TAIL));
+		if (nlines >= TAIL)
+			afree(p - TAIL);
 		if (nlines >= maxlines ||  (p = alloc(MAXLEN)) == NULL)
 			return -1;
 		else {

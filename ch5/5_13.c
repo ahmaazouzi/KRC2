@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <string.h>
 
-#define MAXLINES 10
-#define MAXLEN 10
+#define MAXLINES 5000
+#define MAXLEN 1000
 #define TAIL 3
-#define ALLOCSIZE 44
+#define ALLOCSIZE 10000
 
 static char allocbuf[ALLOCSIZE];
 static char *allocp = allocbuf;
@@ -22,7 +22,7 @@ int main(){
 		writelines(lineptr, nlines);
 		return 0;
 	} else {
-		printf("%s\n", "error: input too big to sort\n");
+		printf("%s", "error: input too big to sort\n");
 		return 1;
 	}
 }
@@ -32,32 +32,30 @@ char *alloc(int);
 void afree(char *);
 
 int readlines(char *lineptr[], int maxlines){
-	int len, nlines;
+	int len, nlines, tailines;
 	char *p, line[MAXLEN];
 
 	int lala = TAIL;
-	nlines = 0;
+	nlines = tailines = 0;
 	while ((len = get_line(line, MAXLEN)) > 0){
-
-		if (nlines >= maxlines ||  (p = alloc(len)) == NULL)
+		if (nlines >= maxlines ||  (p = alloc(MAXLEN-1)) == NULL)
 			return -1;
 		else {
+			if (tailines == TAIL)
+				tailines = 0;
 
-			line[len-1] = '\0';
-			if (nlines)
-				afree(p);
-
+			line[MAXLEN-2] = '\0';
 			strcpy(p, line);
 
-			lineptr[nlines++] = p;
+			lineptr[tailines++] = p;
 		}
 	}
-	return nlines;
+	return tailines;
 }
 
 void writelines(char *lineptr[], int nlines){
 	while (nlines-- > 0)
-		printf("%s\n", *lineptr++);
+		printf("%d: %s\n", nlines, *lineptr++);
 }
 
 void swap(char *v[], int i, int j){

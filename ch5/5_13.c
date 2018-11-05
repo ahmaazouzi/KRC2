@@ -35,19 +35,24 @@ int readlines(char *lineptr[], int maxlines){
 	int len, nlines;
 	char *p, line[MAXLEN];
 
+	int lala = TAIL;
 	nlines = 0;
 	while ((len = get_line(line, MAXLEN)) > 0){
-		if (nlines >= TAIL)
-			afree(p - TAIL);
-		if (nlines >= maxlines ||  (p = alloc(MAXLEN)) == NULL)
+
+		if (nlines >= maxlines ||  (p = alloc(len)) == NULL)
 			return -1;
 		else {
-			line[len - 1] = '\0';
+
+			line[len-1] = '\0';
+			if (nlines)
+				afree(p);
+
 			strcpy(p, line);
+
 			lineptr[nlines++] = p;
 		}
 	}
-	return TAIL + 1;
+	return nlines;
 }
 
 void writelines(char *lineptr[], int nlines){

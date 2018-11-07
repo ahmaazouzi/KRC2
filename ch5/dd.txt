@@ -4,3 +4,15 @@ Creating the program with a text editor of your choosing. (I like vim for long p
 Compiling it with gcc.
 Running it.
 If any of these steps fail, the next step is debugging. We'll talk about debugging elsewhere.
+See the chapter on how to use the Zoo for details of particular commands. The basic steps are
+
+Creating the program with a text editor of your choosing. (I like vim for long programs and  cat for very short ones.)
+Compiling it with gcc.
+Running it.
+If any of these steps fail, the next step is debugging. We'll talk about debugging elsewhere.
+See the chapter on how to use the Zoo for details of particular commands. The basic steps are
+
+Creating the program with a text editor of your choosing. (I like vim for long programs and  cat for very short ones.)
+Compiling it with gcc.
+Running it.
+If any of these steps fail, the next step is debugging. We'll talk about debugging elsewhere.

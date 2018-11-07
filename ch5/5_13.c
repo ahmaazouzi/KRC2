@@ -3,8 +3,8 @@
 
 #define MAXLINES 5000
 #define MAXLEN 1000
-#define TAIL 3
-#define ALLOCSIZE 10000
+#define TAIL 10
+#define ALLOCSIZE 10122
 
 static char allocbuf[ALLOCSIZE];
 static char *allocp = allocbuf;
@@ -41,14 +41,17 @@ int readlines(char *lineptr[], int maxlines){
 		if (nlines >= maxlines ||  (p = alloc(MAXLEN-1)) == NULL)
 			return -1;
 		else {
-			if (tailines == TAIL)
+			if (tailines == TAIL){
+				afree(allocbuf);
 				tailines = 0;
+			}
 
-			line[MAXLEN-2] = '\0';
+			line[len-1] = '\0';
 			strcpy(p, line);
 
 			lineptr[tailines++] = p;
 		}
+		nlines++;
 	}
 	return tailines;
 }

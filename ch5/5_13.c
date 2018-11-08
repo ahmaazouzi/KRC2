@@ -13,7 +13,7 @@ static char *allocp = allocbuf;
 char *lineptr[MAXLINES];
 
 int readlines(char *lineptr[], int nlines, int);
-void writelines(char *lineptr[], int nlines);
+void writelines(char *lineptr[], int nlines, int);
 
 int main(int argc, char *argv[]){
 	int nlines, tail, tailval;
@@ -32,7 +32,7 @@ int main(int argc, char *argv[]){
 		tailval = atoi(*++argv);
 
 	if ((nlines = readlines(lineptr, MAXLINES, tailval)) >= 0){
-		writelines(lineptr, nlines);
+		writelines(lineptr, nlines, tailval);
 		return 0;
 	} else {
 		printf("%s", "error: input too big to sort\n");
@@ -53,8 +53,8 @@ int readlines(char *lineptr[], int maxlines, int tailval){
 		if (nlines >= maxlines ||  (p = alloc(MAXLEN-1)) == NULL)
 			return -1;
 		else {
-			if (tailines == (2 * tailval)){
-				tailines = tailval;
+			if (tailines == tailval){
+				tailines = 0;
 				afree(allocbuf);	
 			}
 
@@ -65,13 +65,15 @@ int readlines(char *lineptr[], int maxlines, int tailval){
 		}
 		nlines++;
 	}
-	return (tailval % tailines);
+	return tailines;
 }
 
-void writelines(char *lineptr[], int nlines){
-	int z = 1;
+void writelines(char *lineptr[], int nlines, int tailval){
+	int i = nlines;
+	while(i < tailval)
+		printf("%s\n", lineptr[i++]);
 	while (nlines-- > 0)
-		printf("%d: %s\n", z++, *lineptr++);
+		printf("%s\n", *lineptr++);
 }
 
 int get_line(char *s, int lim){

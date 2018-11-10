@@ -11,20 +11,25 @@ int readlines(char *lineptr[], int nlines);
 void writelines(char *lineptr[], int nlines);
 
 void qasort(void *lineptr[], int left, int right,
-	int (*comp)(void *, void *));
+	int (*comp)(void *, void *), int);
 
 int numcomp(const char *, const char *);
 
 int main(int argc, char *argv[]){
-	int nlines;
-	int numeric = 0;
+	int nlines, reverse;
+	int numeric = reverse = 0;
 
-	if (argc > 1 && strcmp(argv[1], "-n") == 0)
-		numeric = 1;
+	if (argc > 1)
+		while (--argc > 0){
+			if (strcmp(argv[argc], "-n") == 0)
+				numeric = 1;
+			if (strcmp(argv[argc], "-r") == 0)
+				reverse = 1;
+		}
 
 	if ((nlines = readlines(lineptr, MAXLINES)) >= 0){
 		qasort((void **) lineptr, 0, nlines - 1,
-			(int (*) (void *, void *)) (numeric ? numcomp : strcmp));
+			(int (*) (void *, void *)) (numeric ? numcomp : strcmp), reverse);
 		writelines(lineptr, nlines);
 		return 0;
 	} else {
@@ -58,7 +63,7 @@ void writelines(char *lineptr[], int nlines){
 }
 
 void qasort(void *v[], int left, int right,
-	int (*comp) (void *, void *)){
+	int (*comp) (void *, void *), int reverse){
 
 	int i, last;
 	void swap(void *v[], int, int);
@@ -68,11 +73,16 @@ void qasort(void *v[], int left, int right,
 	swap(v, left, (left + right) / 2);
 	last = left;
 	for (i = left + 1; i <= right; i++)
-		if ((*comp)(v[i], v[left]) < 0)
-			swap(v, ++last, i);
+		if (reverse){
+			if ((*comp)(v[i], v[left]) > 0)
+				swap(v, ++last, i);
+		} else {
+			if ((*comp)(v[i], v[left]) < 0)
+				swap(v, ++last, i);
+		}
 	swap(v, left, last);
-	qasort(v, left, last - 1, comp);
-	qasort(v, last + 1, right, comp);
+	qasort(v, left, last - 1, comp, reverse);
+	qasort(v, last + 1, right, comp, reverse);
 }
 
 int numcomp(const char *s1, const char *s2){

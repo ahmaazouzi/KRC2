@@ -2,6 +2,7 @@
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 #define MAXLINES 5000
 #define MAXLEN 1000
@@ -103,12 +104,19 @@ int numcomp(const char *s1, const char *s2){
 		return 0;
 }
 
-int strcomp(const char *s1, const char *s2){
-	if (foldstate) {
-		printf("%s\n", "What what wha!");
-		return 8000;
+int strcomp(const char *s, const char *t){
+	if (foldstate && isalpha(*s) && isalpha(*t)) {
+		for (; (*s == *t || (*s - *t) == 32 || (*s - *t) == -32 ); s++, t++)
+			if (*s == '\0')
+				return 0;
+		if ((*s >= 97) && *t < 97) 
+			return *s - (*t + 32);
+		else if ((*s < 97) && *t >= 97)
+			return (*s + 32) - *t;
+		else
+			return *s - *t;
 	} else
-		return strcmp(s1, s2);
+		return strcmp(s, t);
 }
 
 void swap(void *v[], int i, int j){

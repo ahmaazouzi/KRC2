@@ -8,8 +8,10 @@
 #define MAXLEN 1000
 char *lineptr[MAXLINES];
 
+char *alloc(int);
 int readlines(char *lineptr[], int nlines);
 void writelines(char *lineptr[], int nlines);
+void strdir(char *, const char *);
 
 void qasort(void *lineptr[], int left, int right,
 	int (*comp)(void *, void *), int, int);
@@ -18,6 +20,7 @@ int numcomp(const char *, const char *);
 int strcomp(const char *, const char *);
 
 int foldstate = 0;
+int dircompstate = 0;
 
 int main(int argc, char *argv[]){
 	int nlines, reverse;
@@ -31,6 +34,8 @@ int main(int argc, char *argv[]){
 				reverse = 1;
 			if (strcmp(argv[argc], "-f") == 0)
 				foldstate = 1;
+			if (strcmp(argv[argc], "-d") == 0)
+				dircompstate = 1;
 		}
 
 	if ((nlines = readlines(lineptr, MAXLINES)) >= 0){
@@ -45,7 +50,6 @@ int main(int argc, char *argv[]){
 }
 
 int get_line(char *, int);
-char *alloc(int);
 
 int readlines(char *lineptr[], int maxlines){
 	int len, nlines;
@@ -104,7 +108,31 @@ int numcomp(const char *s1, const char *s2){
 		return 0;
 }
 
-int strcomp(const char *s, const char *t){
+void strdir(char *t, const char *s){
+	for (; *s != '\0'; s++){
+		if (isdigit(*s) || isalpha(*s) || *s == ' '){
+			*t = *s;
+			t++;
+		}
+	}
+	*t = '\0';
+}
+
+int strcomp(const char *s1, const char *s2){
+	char *s, *t;
+
+	s = alloc(sizeof(s1));
+	t = alloc(sizeof(s2));
+
+	if (dircompstate){
+		strdir(s, s1);
+		strdir(t, s2);
+	} 
+	else {
+		s = s1;
+		t = s2;
+	}
+
 	if (foldstate) {
 		for (; (*s == *t || (( isalpha(*s) && isalpha(*t))
 			&& ((*s - *t) == 32 || (*s - *t) == -32 ))); s++, t++)

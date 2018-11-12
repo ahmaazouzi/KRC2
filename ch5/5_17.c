@@ -1,8 +1,10 @@
-/* For the sake of simplicity, the first argument is the number of a filed.
+/* For the sake of simplicity, it's assumed that only one field is to be sorted at a time.
+ * and that he first argument is the number of a filed.
  * If the first argument is a number, the program will split the line into fields,
  * find the specified field and sort the text based on it; 
  * otherwise, it processes each line as a single string.
  */
+
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
@@ -11,6 +13,8 @@
 
 #define MAXLINES 5000
 #define MAXLEN 1000
+#define FIELD 200
+
 char *lineptr[MAXLINES];
 
 char *alloc(int);
@@ -26,10 +30,31 @@ int strcomp(const char *, const char *);
 
 int foldstate = 0;
 int dircompstate = 0;
+int field = 0;
 
 int main(int argc, char *argv[]){
 	int nlines, reverse;
 	int numeric = reverse = 0;
+
+	char *dd, *bb;
+	dd = strdup("Ahmed is a sick man");
+	bb = alloc(sizeof(dd)); 
+	bb = strcpy(bb, dd);
+	char *z;
+	int i = 0;
+	while((z = strsep(&bb, " ")) != NULL && i < 2){
+		i++;
+
+	}
+	printf("%s\n", z);
+	printf("%s\n", dd);
+
+
+	return 0;
+
+	if (argc > 0 && isdigit(argv[1][0]) && atoi(argv[1]) > 1){
+		field = atoi(argv[1]);
+	}
 
 	if (argc > 1)
 		while (--argc > 0){
@@ -62,7 +87,7 @@ int readlines(char *lineptr[], int maxlines){
 
 	nlines = 0;
 	while ((len = get_line(line, MAXLEN)) > 0)
-		if (nlines >= maxlines ||  (p = alloc(len)) == NULL)
+		if (nlines >= maxlines ||  (p = alloc(FIELD + len)) == NULL)
 			return -1;
 		else {
 			line[len - 1] = '\0';
@@ -76,6 +101,18 @@ void writelines(char *lineptr[], int nlines){
 	while (nlines-- > 0)
 		printf("%s\n", *lineptr++);
 }
+
+// stroffset(){
+// 	char *dd;
+// 	dd = strdup("Ahmed is a sick man");
+// 	char *z;
+// 	int i = 0;
+// 	while((z = strsep(&dd, " ")) != NULL && i < 2){
+// 		i++;
+
+// 	}
+// 	printf("%s\n", z);	
+// }
 
 void qasort(void *v[], int left, int right,
 	int (*comp) (void *, void *), int reverse, int fold){
@@ -176,7 +213,7 @@ int get_line(char *s, int lim){
   	return i;
 }
 
-#define ALLOCSIZE 10000
+#define ALLOCSIZE 500000
 
 static char allocbuf[ALLOCSIZE];
 static char *allocp = allocbuf;

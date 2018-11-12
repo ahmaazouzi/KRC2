@@ -1,2 +1,6 @@
-#b
-+a
+aaa 12
+aaa 3
+bbb 40
+zzz 111
+bbb 1111
+ddd 90000

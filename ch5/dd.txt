@@ -1,6 +1,3 @@
-aaa 12
-aaa 3
-bbb 40
-zzz 111
-bbb 1111
-ddd 90000
+bb vv 2
+zz ll 10
+aa mm 5

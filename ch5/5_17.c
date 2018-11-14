@@ -35,9 +35,6 @@ int main(int argc, char *argv[]){
 	int nlines, reverse;
 	int numeric = reverse = 0;
 
-	char *dd;
-	dd = strdup("Ahmed is a sick man");
-
 	if (argc > 1)
 		while (--argc > 0){
 			if (strcmp(argv[argc], "-n") == 0)

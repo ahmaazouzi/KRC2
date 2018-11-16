@@ -1,1 +1,1 @@
-int *daytab[13]
+int *comp(), int *comp();  

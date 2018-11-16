@@ -21,9 +21,12 @@ int main(){
 		strcpy(datatype, token);
 		out[0] = '\0';
 		dcl();
-		if (tokentype != '\n')
+		/* Allow for multiple declaration in one line separated by commas or semicolons*/
+		if (tokentype == '\n' || tokentype == ';' || tokentype == ',')
+			printf("%s: %s %s\n", name, out, datatype);
+		else
 			printf("syntax error\n");
-		printf("%s: %s %s\n", name, out, datatype);
+		
 	}
 
 	return 0;
@@ -37,7 +40,10 @@ int gettoken(void){
 	while ((c = getch()) == ' ' || c == '\t')
 		;
 	if (c == '('){
-		if ((c = getch()) == ')'){
+		/* keep running in spite of spurrious blanks inside function parens*/
+		while ((c = getch()) == ' ' || c == '\t')
+			;	
+		if (c == ')'){
 			strcpy(token, "()");
 			return tokentype = PARENS;
 		} else {
@@ -53,6 +59,7 @@ int gettoken(void){
 		for (*p++ = c; isalnum(c = getch()); )
 			*p++ = c;
 		*p = '\0';
+		ungetch(c);
 		return tokentype = NAME;
 	} else {
 		return tokentype = c;

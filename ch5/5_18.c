@@ -25,10 +25,8 @@ int main(){
 		if (tokentype == '\n' || tokentype == ';' || tokentype == ',')
 			printf("%s: %s %s\n", name, out, datatype);
 		else
-			printf("syntax error\n");
-		
+			printf("syntax error\n");	
 	}
-
 	return 0;
 }
 
@@ -94,7 +92,6 @@ void dirdcl(void){
 			strcat(out, " array");
 			strcat(out, token);
 			strcat(out, " of");
-
 		}
 }
 

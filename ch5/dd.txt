@@ -1,1 +1,1 @@
-int *comp(), int *comp();  
+char (**d()[])()

@@ -14,13 +14,11 @@ int tokentype;
 char token[MAXTOKEN];
 char name[MAXTOKEN];
 char datatype[MAXTOKEN];
-char specifier[MAXTOKEN];
 char out[1000];
 
 int main(){
 	while (gettoken() != EOF){
 		strcpy(datatype, token);
-		strcpy(specifier, token);
 		out[0] = '\0';
 		dcl();
 		/* Allow for multiple declaration in one line separated by commas or semicolons*/
@@ -40,10 +38,16 @@ int gettoken(void){
 	while ((c = getch()) == ' ' || c == '\t')
 		;
 	if (c == '('){
-		for (*p++ = c; (*p++ = getch()) != ')'; )
-			;
-		*p = '\0';
-		return tokentype = PARENS;
+		/* keep running in spite of spurrious blanks inside function parens*/
+		while ((c = getch()) == ' ' || c == '\t')
+			;	
+		if (c == ')'){
+			strcpy(token, "()");
+			return tokentype = PARENS;
+		} else {
+			ungetch(c);
+			return tokentype = '(';
+		}
 	} else if (c == '['){
 		for (*p++ = c; (*p++ = getch()) != ']'; )
 			;
@@ -82,11 +86,9 @@ void dirdcl(void){
 	else
 		printf("error: expected name or (dcl)\n");
 	while ((type = gettoken()) == PARENS || type == BRACKETS)
-		if (type == PARENS){
-			strcat(out, " function");
-			strcat(out, token);
-			strcat(out, " returning");
-		} else {
+		if (type == PARENS)
+			strcat(out, " function returning");
+		else {
 			strcat(out, " array");
 			strcat(out, token);
 			strcat(out, " of");

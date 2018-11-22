@@ -15,6 +15,7 @@ char token[MAXTOKEN];
 char name[MAXTOKEN];
 char datatype[MAXTOKEN];
 char out[1000];
+int named = 0;
 
 int main(){
 	while (gettoken() != EOF){
@@ -37,17 +38,21 @@ int gettoken(void){
 
 	while ((c = getch()) == ' ' || c == '\t')
 		;
-	if (c == '('){
+	if (c == '(' && named == 0){
 		/* keep running in spite of spurrious blanks inside function parens*/
 		while ((c = getch()) == ' ' || c == '\t')
 			;	
 		if (c == ')'){
 			strcpy(token, "()");
 			return tokentype = PARENS;
-		} else {
-			ungetch(c);
+		} else {			ungetch(c);
 			return tokentype = '(';
 		}
+	} else if (c == '(' && named == 1) {
+		for (*p++ = c; (*p++ = getch()) != ')'; )
+			;
+		*p = '\0';
+		return tokentype = PARENS;
 	} else if (c == '['){
 		for (*p++ = c; (*p++ = getch()) != ']'; )
 			;
@@ -58,6 +63,7 @@ int gettoken(void){
 			*p++ = c;
 		*p = '\0';
 		ungetch(c);
+		named = 1;
 		return tokentype = NAME;
 	} else {
 		return tokentype = c;
@@ -85,9 +91,13 @@ void dirdcl(void){
 		strcpy(name, token);
 	else
 		printf("error: expected name or (dcl)\n");
+
 	while ((type = gettoken()) == PARENS || type == BRACKETS)
-		if (type == PARENS)
-			strcat(out, " function returning");
+		if (type == PARENS){
+			strcat(out, " function");
+			strcat(out, token);
+			strcat(out, " returning");
+		}
 		else {
 			strcat(out, " array");
 			strcat(out, token);

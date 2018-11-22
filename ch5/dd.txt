@@ -1,1 +1,1 @@
-char dd b
+char b[44]

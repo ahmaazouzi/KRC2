@@ -14,7 +14,8 @@ struct key {
 	"case", 0,
 	"char", 0,
 	"const", 0,
-	"continue", 0,
+	"int", 0,
+	"sizeof", 0,
 	"default", 0,
 	"unsigned", 0,
 	"void", 0,
@@ -62,16 +63,16 @@ int getword(char *word, int lim){
 	void ungetch(int);
 	char *w = word;
 
-	while (isspace(c = getch()))
+	while (isspace(c = getch()) && c != '"' && c != '_')
 		;
 	if (c != EOF)
 		*w++ = c;
-	if (!isalpha(c)){
+	if (!isalpha(c) && c != '"'){
 		*w = '\0';
-		return 0;
+		return c;
 	}
 	for (; --lim > 0; w++)
-		if (!isalnum(*w = getch())){
+		if (!isalnum(*w = getch()) && *w != '_'){
 			ungetch(*w);
 			break;
 		}

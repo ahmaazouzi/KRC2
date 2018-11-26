@@ -23,6 +23,8 @@ struct key {
 	"while", 0
 };
 
+char s[]= "AAA auto baba";
+
 int getword(char *, int);
 int binsearch(char *, struct key *, int);
 
@@ -58,13 +60,29 @@ int binsearch(char *word, struct key tab[], int n){
 	return -1;
 }
 
+#define INCOMMENT  1
+#define OUTCOMMENT 0
 int getword(char *word, int lim){
-	int c, getch(void);
+	int c, getch(void), commentstate;
 	void ungetch(int);
 	char *w = word;
+	commentstate = OUTCOMMENT;
+
+
 
 	while (isspace(c = getch()) && c != '"' && c != '_')
 		;
+
+	if (c == '/' && commentstate == OUTCOMMENT)
+		if (getch() == '*')
+			while ((c = getch())!= EOF){
+				if (c == '*')
+					if (getch() == '/')
+						break;	
+			}
+	if (c == '"')
+		while ((c = getch())!= EOF && c != '"')
+			;
 	if (c != EOF)
 		*w++ = c;
 	if (!isalpha(c) && c != '"'){

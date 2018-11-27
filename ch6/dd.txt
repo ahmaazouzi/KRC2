@@ -1,7 +1,11 @@
-
-
-while
-
-
-
-/* i am not auto */
+It is the de facto substandard of programming languages.
+    C runs on everything.
+    C lets you write programs that use very few resources.
+    C gives you near-total control over the system, down to the level of pushing around individual bits with your bare hands.
+    C imposes very few constraints on programming style: unlike higher-level languages, C doesn't have much of an ideology. There are very few programs you can't write in C.
+    Many of the programming languages people actually use (Visual Basic, perl, python, ruby, PHP, etc.) are executed by interpreters written in C (or C++, an extension to C).
+You will learn discipline.
+    C makes it easy to shoot yourself in the foot.
+    You can learn to avoid this by being careful about where you point it.
+    Pain is a powerful teacher of caution.
+You will fail CPSC 323 if you don't learn C really well in CPSC 223 (CS majors only).

@@ -3,12 +3,10 @@
 #include <ctype.h>
 
 #define MAXWORD 100
-#define MAXITEM 30
-#define LIMITUS 3 // to be removed
 
 struct tnode {
-	char *word[MAXITEM];
-	int index;
+	char *word;
+	int count;
 	struct tnode *left;
 	struct tnode *right;
 };
@@ -74,24 +72,14 @@ char *strdupa(char *);
 
 struct tnode *addtree(struct tnode *p, char *w){
 	int cond;
-	char source[199999];
-	strcpy(source, w);
-	source[LIMITUS - 1] = '\0';
-	char destination[199999];
-	strcpy(destination, p->word[p->index]);
-	destination[LIMITUS - 1] = '\0';
 
 	if (p == NULL){
 		p = talloc();
-		p->word[p->index] = strdup(w);
-		p->index++;     // increment index when a cond is there
+		p->word = strdup(w);
+		p->count = 1;
 		p->left = p->right = NULL;
-	} else if ((cond = strcmp(w, p->word[p->index])) == 0)
-		;
-	else if ((cond = strcmp(source, destination)) == 0){
-		p = talloc();
-		p->word[p->index++] = strdup(w);
-	}
+	} else if ((cond = strcmp(w, p->word)) == 0)
+		p->count++;
 	else if (cond < 0)
 		p->left = addtree(p->left, w);
 	else
@@ -102,7 +90,7 @@ struct tnode *addtree(struct tnode *p, char *w){
 void treeprint(struct tnode *p){
 	if (p != NULL){
 		treeprint(p->left);
-		printf("%s\n", p->word[0]);
+		printf("%4d %s\n", p->count, p->word);
 		treeprint(p->right);
 	}
 }

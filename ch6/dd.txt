@@ -1,5 +1,6 @@
-zzzb aaa llll tttt tt aannn vvll vvvvv
-zzzzzzzz mmm mmnnnn tttll ttt auto volatile
-char
-char s[]= "AAA auto baba";
-/*AAA auto baba*/
+i b s s 
+aa l i b
+s d
+v
+s i i b
+l

@@ -12,17 +12,21 @@ struct tnode {
 };
 
 struct tnode *addtree(struct tnode *, char *);
+struct tnode *sorttree(struct tnode *, struct tnode *);
 void treeprint(struct tnode *);
 int getword(char *, int);
 
 int main(int argc, char const *argv[]){
 	struct tnode *root;
+	struct tnode *rootsorted;
 	char word[MAXWORD];
 
 	root = NULL;
 	while (getword(word, MAXWORD) != EOF)
 		if (isalpha(word[0]))
 			root = addtree(root, word);
+	rootsorted = NULL;
+	sorttree(rootsorted, root);
 	treeprint(root);
 	return 0;
 }
@@ -84,6 +88,21 @@ struct tnode *addtree(struct tnode *p, char *w){
 		p->left = addtree(p->left, w);
 	else
 		p->right = addtree(p->right, w);
+	return p;
+}
+
+struct tnode *sorttree(struct tnode *p, struct tnode *r){
+	int cond;
+
+	if (p == NULL){
+		p = talloc();
+		p = r;
+		p->left = p->right = NULL;
+	} 
+	// else if (cond < 0)
+	// 	p->left = addtree(p->left, w);
+	// else
+	// 	p->right = addtree(p->right, w);
 	return p;
 }
 

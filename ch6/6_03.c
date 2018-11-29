@@ -6,7 +6,8 @@
 
 struct tnode {
 	char *word;
-	int count;
+	int linenums[MAXWORD];
+	int index;
 	struct tnode *left;
 	struct tnode *right;
 };
@@ -16,42 +17,29 @@ void treeprint(struct tnode *);
 int getword(char *, int);
 
 int main(int argc, char const *argv[]){
+	int c;
 	struct tnode *root;
 	char word[MAXWORD];
 
 	root = NULL;
-	while (getword(word, MAXWORD) != EOF)
+	while ((c = getword(word, MAXWORD)) != EOF){
 		if (isalpha(word[0]))
 			root = addtree(root, word);
+	}
 	treeprint(root);
+
 	return 0;
 }
 
-#define INCOMMENT  1
-#define OUTCOMMENT 0
-
+int linenum = 1;
 int getword(char *word, int lim){
 	int c, getch(void), commentstate;
 	void ungetch(int);
 	char *w = word;
-	commentstate = OUTCOMMENT;
 
-	while (isspace(c = getch()) && c != '"' && c != '_')
-		;
-	if (c == '/' && commentstate == OUTCOMMENT)
-		if (getch() == '*'){
-			commentstate = INCOMMENT;
-			while ((c = getch())!= EOF){
-				if (c == '*')
-					if (getch() == '/'){
-						break;
-						commentstate = OUTCOMMENT;	
-					}
-			}
-		}
-	if (c == '"')
-		while ((c = getch())!= EOF && c != '"')
-			;
+	while (isspace(c = getch()))
+		if (c == '\n')
+			linenum++;
 	if (c != EOF)
 		*w++ = c;
 	if (!isalpha(c) && c != '"'){
@@ -76,10 +64,15 @@ struct tnode *addtree(struct tnode *p, char *w){
 	if (p == NULL){
 		p = talloc();
 		p->word = strdup(w);
-		p->count = 1;
+		p->index = 0;
+		p->linenums[p->index] = linenum; 
 		p->left = p->right = NULL;
-	} else if ((cond = strcmp(w, p->word)) == 0)
-		p->count++;
+	} else if ((cond = strcmp(w, p->word)) == 0 && p->linenums[p->index] == linenum)
+		;
+	else if ((cond = strcmp(w, p->word)) == 0 && p->linenums[p->index] != linenum){
+		p->index++;
+		p->linenums[p->index] = linenum;
+	}
 	else if (cond < 0)
 		p->left = addtree(p->left, w);
 	else
@@ -90,7 +83,12 @@ struct tnode *addtree(struct tnode *p, char *w){
 void treeprint(struct tnode *p){
 	if (p != NULL){
 		treeprint(p->left);
-		printf("%4d %s\n", p->count, p->word);
+		printf("%s: ", p->word);
+		for (int i = 0; i <= p->index;){
+			printf("%d ", p->linenums[i]);
+			i++;
+		}
+		printf("\n");
 		treeprint(p->right);
 	}
 }

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdlib.h>
 
 #define MAXWORD 100
 
@@ -12,22 +13,30 @@ struct tnode {
 };
 
 struct tnode *addtree(struct tnode *, char *);
-struct tnode *sorttree(struct tnode *, struct tnode *);
 void treeprint(struct tnode *);
 int getword(char *, int);
+int compare (const void *, const void *);
+
+typedef struct{
+		int count;
+		char *word;
+} wordcount;
+
+wordcount wordlist[1000];
+int indexo = 0;
 
 int main(int argc, char const *argv[]){
 	struct tnode *root;
-	struct tnode *rootsorted;
 	char word[MAXWORD];
 
 	root = NULL;
 	while (getword(word, MAXWORD) != EOF)
 		if (isalpha(word[0]))
 			root = addtree(root, word);
-	rootsorted = NULL;
-	sorttree(rootsorted, root);
 	treeprint(root);
+	qsort (wordlist, indexo, sizeof(wordcount), compare);
+	for (int i = 0; i < indexo; ++i)
+		printf("%d: %s\n", wordlist[i].count, wordlist[i].word);
 	return 0;
 }
 
@@ -71,6 +80,12 @@ int getword(char *word, int lim){
 	return word[0];
 }
 
+int compare (const void * a, const void * b){
+  wordcount *wordcountA = (wordcount *)a;
+  wordcount *wordcountB = (wordcount *)b;
+  return (wordcountA->count - wordcountB->count);
+}
+
 struct tnode *talloc(void);
 char *strdupa(char *);
 
@@ -91,25 +106,12 @@ struct tnode *addtree(struct tnode *p, char *w){
 	return p;
 }
 
-struct tnode *sorttree(struct tnode *p, struct tnode *r){
-	int cond;
-
-	if (p == NULL){
-		p = talloc();
-		p = r;
-		p->left = p->right = NULL;
-	} 
-	// else if (cond < 0)
-	// 	p->left = addtree(p->left, w);
-	// else
-	// 	p->right = addtree(p->right, w);
-	return p;
-}
-
 void treeprint(struct tnode *p){
 	if (p != NULL){
 		treeprint(p->left);
-		printf("%4d %s\n", p->count, p->word);
+		wordlist[indexo].count = p->count;
+		wordlist[indexo].word = strdupa(p->word);
+		indexo++;
 		treeprint(p->right);
 	}
 }

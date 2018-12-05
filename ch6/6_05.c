@@ -18,18 +18,18 @@ struct nlist *install(char *, char *);
 void undef(char *);
 
 int main(){
-	install("aa", "15000");
+	install("a", "a");
+	install("b", "b");
+	install("c", "c");
+	install("d", "d");
 	
-	undef("aa");
-	struct nlist *baba = lookup("aa");
+	undef("a");
+	struct nlist *baba = lookup("a");
 
-	// printf("rat: %d\n", hash("rat"));
-	// printf("tar: %d\n", hash("rat"));
-	
 	if (baba)
 		printf("%s\n", baba->defn);
 	else
-		printf("WTF, dude!!\n");
+		printf("Element doesn't exist in table!!\n");
 	return 0;
 }
 
@@ -72,12 +72,13 @@ struct nlist *install(char *name, char *defn){
 }
 
 void undef(char *name){
-	unsigned hashval;
-	struct nlist *np;
-
-	if ((np = lookup(name)) != NULL){
-			np->next = NULL;
-	}
+	struct nlist *dp;
+	dp = lookup(name);
+	if (dp != NULL && dp->next != NULL)
+		*dp = *dp->next;
+	else 
+		/* a little hack, but I can't do any better */
+		dp->name = "s";
 }
 
 char *strdupa(char *s){

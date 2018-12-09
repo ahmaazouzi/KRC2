@@ -2,12 +2,9 @@
 #include <string.h>
 
 #define MAXLINE 1000
-#define MAXLINES 5000
-
 
 char *f_gets(char *, int n, FILE *);
 int f_puts(char *, FILE *);
-int get_line(char *, int);
 
 int main(int argc, char const *argv[]){
 	char line1[MAXLINE];
@@ -40,13 +37,6 @@ int main(int argc, char const *argv[]){
 	return 0;
 }
 
-int get_line(char *line, int max){
-	if (f_gets(line, max, stdin) == NULL)
-		return 0;
-	else
-		return strlen(line);
-}
-
 char *f_gets(char *s, int n, FILE *iop){
 	register int c;
 	register char *cs;
@@ -67,28 +57,3 @@ int f_puts(char *s, FILE *iop){
 		putc(c, iop);
 	return ferror(iop) ? EOF : 0;
 }
-
-// int main(int argc, char const *argv[]){
-// // // 	FILE *fp;
-// // // 	void filecopy(FILE *, FILE *);
-
-// // // 	if (argc == 1)
-// // // 		filecopy(stdin, stdout);
-// // // 	else
-// // // 		while (--argc > 0)
-// // // 			if ((fp == fopen(*++argv, "r")) == NULL){
-// // // 				printf("cat: can't open %s\n", *argv);
-// // // 				return 1;
-// // // 			} else {
-// // // 				filecopy(fp, stdout);
-// // // 				fclose(fp);
-// // // 			}
-// 	return 0;
-// }
-
-// void filecopy(FILE *ifp, FILE *ofp){
-// 	int c;
-
-// 	while ((c = getc(ifp)) != EOF)
-// 		putc(c, ofp);
-// }

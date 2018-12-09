@@ -29,7 +29,7 @@ int main(int argc, char const *argv[]){
 			} else {
 				while (f_gets(line, MAXLINE, fp) != NULL)
 					if (strstr(line, argv[1]) != NULL)
-						printf("%s", line);
+						printf("%s: %s", argv[index], line);
 			}
 			fclose(fp);
 		}

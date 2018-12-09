@@ -4,8 +4,6 @@
 #define MAXLINE 1000
 
 char *f_gets(char *, int n, FILE *);
-int f_puts(char *, FILE *);
-
 int main(int argc, char const *argv[]){
 	char line1[MAXLINE];
 	char line2[MAXLINE];
@@ -26,8 +24,8 @@ int main(int argc, char const *argv[]){
 	while ((f_gets(line1, MAXLINE, fp1) != NULL) &&
 		(f_gets(line2, MAXLINE, fp2) != NULL))
 		if (strcmp(line1, line2) != 0){
-			printf("%s: %s\n", argv[1], line1);
-			printf("%s: %s\n", argv[2], line2);
+			printf("%s: %s", argv[1], line1);
+			printf("%s: %s", argv[2], line2);
 			break;
 		}
 
@@ -47,13 +45,4 @@ char *f_gets(char *s, int n, FILE *iop){
 			break;
 	*cs = '\0';
 	return (c == EOF && cs == s) ? NULL : s;
-
-}
-
-int f_puts(char *s, FILE *iop){
-	int c;
-
-	while ((c = *s++))
-		putc(c, iop);
-	return ferror(iop) ? EOF : 0;
 }

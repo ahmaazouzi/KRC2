@@ -1,3 +1,4 @@
+/* All or most answers to 4.4 to 4.10 are in this file with commented lines*/
 #include "stdio.h"
 #include "math.h"
 #include <stdlib.h>

@@ -24,3 +24,49 @@ int main()
 		putchar(c);	
 	}
 }
+
+/* 
+The following is a more generalized program, something that kinda trims text 
+of all double whitespace that includes tabs, newlinees and blanks.
+/*
+
+
+/*
+#include <stdio.h>
+
+int main(){
+	int c;
+	int tab, space, newline;
+	tab = space = newline = 0;
+
+	while ((c = getchar()) != EOF){
+		if (c == '\n'){
+			if (newline) ;
+			else {
+				putchar(c);
+				newline = 1;
+			}
+		}
+		else if (c == '\t'){
+			if (tab) ;
+			else {
+				putchar(c);
+				tab = 1;
+			}
+		}
+		else if (c == ' '){
+			if (space) ;
+			else {
+				putchar(c);
+				space = 1;
+			}
+		} 
+		else {
+			if (tab) tab = 0;
+			else if (newline) newline = 0;
+			else if (space) space = 0;
+			putchar(c);
+		}
+	}
+}
+*/

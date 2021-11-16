@@ -1,8 +1,5 @@
 #include <stdio.h>
 
-#define OUT 0
-#define IN 1
-
 int main(){
 
   int j, i, c, wl, hcolumn;
@@ -21,11 +18,9 @@ int main(){
       if (wl > 10) ++wlarray[10];
       else if (wl > 0)
         ++wlarray[wl -1];
-      state = OUT;
       wl = 0;
     }
     else{
-      state = IN;
       ++wl;      
     }
   }

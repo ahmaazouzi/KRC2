@@ -105,6 +105,134 @@ int main(){
 - What follows is a gentle warning about the "perils" of global variables. 
 
 ## Types, Operators and Expressions:
+- _Variables_ and _constants_ are the data objects programs manipulate. _Operators_ specify what to do with variables and constants. _Expressions_ combine variables and constants using operators to produce new values. Objects (represented by variables and constants) have types. The _type_ of an object determines the range of values this object can have and the operations that can be performed on it. 
+- This section will detail most of what one needs to know about types, operators, variables, constants and expressions (and some other things) as specified in the ANSI standard.  
+
+### Names:
+- A Variable/constant name can have both letters and digits but must start with a letter (or an underscore **`_`**). It's advisable to avoid starting variable names with underscores because standard library functions tend to have those. 
+- By convention, variables tend to have lowercase letters while constants are uppercase.  
+- The first 31 characters of an internal variable name are significant but the rest is garbage. As for external variables, fewer first characters are significant. ANSI C guarantees the significance of the first 6 characters. 
+
+### Data Types and Size:
+- C has the following **4 data types**:
+	- **`char`**: holds a single byte and is used for characters.
+	- **`int`**.
+	- **`float`**.
+	- **`double`**.
+- A type can have extra qualifiers resulting in more granular data types such as **`short int`**:
+	- **`int`** types can have the qualifiers **`short`** and **`long`**. These qualifiers are not really the same across systems. `short` tends to have the size 16 bits. `int` by itself  is usually 32-bit long even in 64-bit systems. `long` can be 32 but it tends to represent the CPU's architecture so it is 64 bits in 64-bit systems. The main restrictions differentiating these types in C are that shorts and ints must be at least 16-bit, longs at least 32-bit long, and shorts not longer than ints, and ints not longer than longs. When these qualifiers are used, **`int`** is not necessary, so **`long int`** is equivalent to **`long`**.
+	- **`int`** can also be **`signed`** and represent positive and negative integers or **`unsigned`** for representing positive integers only. The range of absolute values that can be represented by signed integers is roughly half of what can be represented by its unsigned counterpart. All printable characters (ASCII) are positive regardless of if `char` is signed or unsigned, because even signed chars they are represented by the range 0 to 127.
+	- `double` can also qualified by `long` resulting in **`long double`** which might have extra precision than `double` and `float`. Depending on the machine, `float`, `double`, and `long double` might have 1, 2, or 3 distinctive sizes. 
+	- The standard header `limits.h` has the sizes of integral types, while `<float.h>` has those of floating-point types. 
+
+### Constants/Literals:
+#### Integers and Floating-Points:
+- Integer literals can written as:
+	- `123` as an `int`. 
+	- `123l` or `123L` as a `long int`.
+	- `123U` or `123U` as a `unsigned int`.
+	- `123UL`, `123ul`, etc. as an `unsigned long int`.
+- If an integral literal is too long to fit in an `int`, it is automatically assigned to a `long`. 
+- Floating-point literals can be represented as:
+	- `123.0` is automatically a `double`.
+	- `5e4` or `5.0e4` is also automatically a `double`.
+	- `123.0L`/ `123.0l` is a `long double`.
+	- `123.0f` and `123f` are for `float`.
+- Integers can be represented as octals with leading zeros, so `05` is a `5` in octal.
+- Integers can also be represented by hexadecimals using a leading **`0X`** as in **`0X8`**. Hexadecimal and octals can also be followed by `U` and `L` to indicated their long and/or unsigned as in `0XFUL`.
+
+#### Characters:
+- A **character constant** (or literal, Imma use literal from now on to refer to what the book calls constant) is an "integer written as a one character within single quotes, such as **`x`**". 
+- Certain characters, some of which are invisible, can be represented by escape sequences such as **`n`** both as characters and as part of strings.
+| Escape sequence | Description |
+| --- | --- |
+|  **`\a`** | alert (bell) character |
+|  **`\b`** | backspace |
+|  **`\f`** | formfeed |
+|  **`\n`** | new line |
+|  **`\r`** | carriage return |
+|  **`\t`** | horizontal tab |
+|  **`\v`** | vertical tab |
+|  **`\\`** | backslash |
+|  **`\?`** | question mark |
+|  **`\'`** | single quote |
+|  **`\"`** | double quote |
+|  **`\ooo`** | octal number |
+|  **`\xhh`** | hexadecimal |
+- **`\ooo`** (1 to 3 octal digits)and **`\xhh`** (1 or more hexadecimal digits)allow you to represent a character as an octal or hexadecimal respectively so `x4b` is the character `K` and '\124' is octal for `T`.  This is useful for representing invisible characters or any character as a symbolic constant with the `#define` qualifier.
+ 
+#### Constant Expressions:
+- These are expressions involving literals only. They may be evaluated in compile time so can be plugged anywhere a literal can. Examples include:
+```c
+#define MAXLINE 1000
+
+char line[MAXLINE + 1]; // MAXLINE + 1 is a constant expression.
+```
+
+#### String Constant:
+- A **string constant** is a "sequence of zero or more characters surrounded by double quotes" (different from characters which are surrounded by single quotes). Double quotes are not part of a string but serve to delimit it. 
+- It also looks like **`'"'`** is legal as a character but you need the double quote escape character **`\"`** to represent a double quote in a string!
+- String literals can also be concatenated in compile time which is useful when trying to work with long strings that need to be split over multiple source lines. The two following statements print the same thing:
+```c
+printf("Hello, world!\n");
+printf("Hello,"  " world!" "\n");
+```
+- A string is actually an array of characters terminated by the **`\0`** (so called *null character*). To store a string you need an extra slot in the character array for this terminator. There is no limit on how long a string can be, but programs need to scan the whole string to determine its length. The program reads each characters until it encounters the null encounter and then it knows the length of the string. A popular standard library function for this **strlen**.
+- One should always be careful about the difference between characters and strings that might look similar. `x` is an integer representing a single character, while `"x"` is an array of characters containing a character 'x' and a null terminator `\0`. You can have an empty string `""`, but you cannot have an empty character constant `''`.
+
+#### Enumeration Constants:
+- **Enumeration constants** are maybe another important kinda literal. They are lists of integers that progress linearly, unless specified otherwise:
+```c
+enum nums {ZERO, ONE, TWO, THREE};
+```
+- Elements in the enumeration are automatically initialized to 0, 1, 2, 3. You can specify these value, and if you specify just one, the linear progression will continue for the following elements you don't specify. The following enumeration will have numbers 100, 101, 0, 1:
+```c
+enum nums {ZERO = 100, ONE, TWO = 0, THREE};
+```
+- Enumerations offer a few advantages over `#define` such as compile time checking *(Not quite sure about this one)*, and automatic value generation.
+
+### Declarations:
+- A declaration must be made before a variable can be used, although "some declarations can be made implicitly by context" *(Oh, really!!! :confused:)*.
+- A declaration in C specifies a certain type followed by a list of variables of that type:
+```c
+int a, b, c;
+char c, line[1000];
+```
+- A declaration can also contain a initialization when it's followed by an assignment operator and an expression.
+- If the variable being initialized is an external variable, it is initialized once before the program starts execution. The book says such variable must be initialized to a constant expression. *What is not a constant expression?* :confused:.
+- Global and *static* variables *(What are these?!!)* are automatically initialized to 0, but uninitialized local variables have garbage. 
+
+### `const`:
+- The qualifier **`const`** can be applied to any variable declaration. It indicates that a variable cannot be changed. Declaring but not initializing an external `const` guarantees its value defaults to 0, but an internal `const` is garbage and stays garbage.
+- `const` can also be used to prevent arrays from being changed. The program's behavior when attempting to change a const array is implementation specific:
+```c
+const char msg[] = "warning: ";
+```
+
+### Arithmetic Operators:
+- Arithmetic arithmetize. 
+- This table details the precedence and associativity of all C operators. Some of these operators we will see in later sections.
+
+| Operators / precedence | Associativity |
+| --- | --- |
+| **`()`**  **`[]`**  **`->`**  **`.`** | left-to-right |
+| **`!`**  **`~`**  **`++`**  **`--`** **`+`**  **`-`**  **`*`**  **`&`** **`(`_type_`)`**  **`sizeof`** | right-to-left |
+| **`*`**  **`/`**  **`%`** | left-to-right |
+| **`+`**  **`-`** | left-to-right |
+| **`<<`**  **`>>`** | left-to-right |
+| **`<`**  **`<=`**  **`>`**  **`>=`** | left-to-right |
+| **`==`**  **`!=`** | left-to-right |
+| **`&`** | left-to-right |
+| **`^`** | left-to-right |
+| **`|`** | left-to-right |
+| **`&&`** | left-to-right |
+| **`||`** | right-to-left |
+| **`?:`** | right-to-left |
+| **`=`**  **`+=`**  **`-=`**  **`*=`** **`/=`**  **`%=`**  **`&=`**  **`^=`** **`|=`**  **`<<=`**  **`>>=`** | left-to-right |
+| **`,`** | left-to-right |
+
+### Type Conversions:
+
 ## Control Flow:
 ## Functions and Program Structure:
 ## Pointers and Arrays:

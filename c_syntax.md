@@ -144,6 +144,7 @@ int main(){
 #### Characters:
 - A **character constant** (or literal, Imma use literal from now on to refer to what the book calls constant) is an "integer written as a one character within single quotes, such as **`x`**". 
 - Certain characters, some of which are invisible, can be represented by escape sequences such as **`n`** both as characters and as part of strings.
+
 | Escape sequence | Description |
 | --- | --- |
 |  **`\a`** | alert (bell) character |
@@ -159,6 +160,7 @@ int main(){
 |  **`\"`** | double quote |
 |  **`\ooo`** | octal number |
 |  **`\xhh`** | hexadecimal |
+
 - **`\ooo`** (1 to 3 octal digits)and **`\xhh`** (1 or more hexadecimal digits)allow you to represent a character as an octal or hexadecimal respectively so `x4b` is the character `K` and '\124' is octal for `T`.  This is useful for representing invisible characters or any character as a symbolic constant with the `#define` qualifier.
  
 #### Constant Expressions:
@@ -211,12 +213,12 @@ const char msg[] = "warning: ";
 
 ### Arithmetic Operators:
 - Arithmetic arithmetize. 
-- This table details the precedence and associativity of all C operators. Some of these operators we will see in later sections.
+- This table details the precedence and associativity of all C operators. Some of these operators we will see in later sections:
 
 | Operators / precedence | Associativity |
 | --- | --- |
 | **`()`**  **`[]`**  **`->`**  **`.`** | left-to-right |
-| **`!`**  **`~`**  **`++`**  **`--`** **`+`**  **`-`**  **`*`**  **`&`** **`(`_type_`)`**  **`sizeof`** | right-to-left |
+| **`!`**  **`~`**  **`++`**  **`--`** **`+`**  **`-`**  **`*`**  **`&`** **`(type)`**  **`sizeof`** | right-to-left |
 | **`*`**  **`/`**  **`%`** | left-to-right |
 | **`+`**  **`-`** | left-to-right |
 | **`<<`**  **`>>`** | left-to-right |
@@ -231,9 +233,52 @@ const char msg[] = "warning: ";
 | **`=`**  **`+=`**  **`-=`**  **`*=`** **`/=`**  **`%=`**  **`&=`**  **`^=`** **`\|=`**  **`<<=`**  **`>>=`** | left-to-right |
 | **`,`** | left-to-right |
 
+### Logical Operators:
+- Just remember as is the case is with other languages, the logical operators **`&&`** and **`||`** stop evaluation if the first operand gives enough information about the truthfulness of the expression. `||` does not check the second operand if the first one is true, and `&&` stops if the first operand is false. 
+- Another weird feature found in other languages as well is that `&&` has a higher precedence than `||`. 
+- The unary **`!`**, as expected, converts a non-zero operand into a zero and a zero into a one.
+
 ### Type Conversions:
+- Expressions involving operands of different types might cause operands to be converted automatically. The rules governing automatic type conversions can placed in three large classes:
+	- The general rule is that narrower type values can be converted automatically to larger ones without problems or warnings. An `int` can be readily converted into a `float`, a `long` or a `double`. 
+	- Some expressions are not allowed such as using a float as an array index.
+	- Converting larger types to smaller types can result in loss of information but is totally legal in C although the compiler might throw warnings. 
+
+#### `char` Arithmetic:
+- Chars can be used in arithmetic operations just like other integer types. They allow for some nifty tricks like converting between cases or converting character arrays to numbers or vice versa. This is mostly the case with the _ASCII character set_. 
+- C guarantees that regardless of what type is used to represent a character, long or short, signed or unsigned, negative or positive, the character will always be shown/represented correctly. This is mainly the result of the fact that ASCII characters are nicely tucked in the lowest 7 bits of integral value. The 8th bit is used for signage so the 127 characters should be fine regardless of the sign. *(I guess I need to learn English first)*.
+- Conversion rules can be convoluted when involving different types and lengths, but they generally conform to common sense. Just be aware of these traps, know the type value ranges of your system, and try to force the types you want.
+- You can use casting just like Java and others to force an expression to be of the desired type. 
+
+### Increment vs. Decrement:
+- One has to be careful about the difference between *postfix* and *prefix* increment/decrement. Prefix increases the value of a variable before using it, while in post fix the value is changed after being used as the following example shows:
+```c
+int n, x;
+n = 5;
+
+x = ++n; // x is 6
+x = n++; // x now is still 6, even though n becomes 7 after this increment
+```
+- This little detail can introduce frustrating bugs especially in loop bodies.
+
+## Conditional Expression with the Ternary Operator:
+```c
+z = (a > b) ? a : b;
+```
+- We are all familiar with this. One need to just be careful about the crazy automatic conversion rules as `(a > b)` might behave unexpectedly maybe when one its operands is unsigned or a gloat, etc.
 
 ## Control Flow:
+- In this section we ill briefly go over a few rules of how *control flow* is done. Control flow basically refer to two loops and conditional statements. 
+- Again, we will only focus on those weird and unfamiliar parts of the syntax that are specific to C. 
+
+### Statements and Blocks:
+- In addition to expressions, C also consists of **statements**. An expression becomes a statement when followed by a semicolon. Semicolons are not separators but act as statement terminators.
+- C also consists of **block** which are delimited by a pair of braces **`{ ... }`**. Blocks are used to group statements together. You can also think of them as some kind of *compound statements*. A block is "syntactically equivalent to [a] statement". A block does not need be followed with a semicolon.
+
+### If-else and Else-if:
+- You need a block if your **`if`** statement is followed by multiple statements, but the block braces if it's followed by just one statement. 
+- **`else`** is optional which means it can be a source of ambiguity. As a general rule, `else` follows the most recent `if` when there is ambiguity. Sometimes an `if` statement might be followed by just one statement so it does not need braces around the following statement, but statement following `if` might be a complex one spanning multiple lines and would have blocks of its own, etc. In such a case, it's easy to have an ambiguous and hard to find `else`.
+
 ## Functions and Program Structure:
 ## Pointers and Arrays:
 ## Structures:

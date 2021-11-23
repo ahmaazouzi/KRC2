@@ -280,6 +280,63 @@ z = (a > b) ? a : b;
 - **`else`** is optional which means it can be a source of ambiguity. As a general rule, `else` follows the most recent `if` when there is ambiguity. Sometimes an `if` statement might be followed by just one statement so it does not need braces around the following statement, but statement following `if` might be a complex one spanning multiple lines and would have blocks of its own, etc. In such a case, it's easy to have an ambiguous and hard to find `else`.
 
 ## Functions and Program Structure:
+- This section will tackle functions and program structures. The latter is about programs that spread over multiple source files.
+
+### Function Basics:
+- Function definitions have the following form:
+```
+return-type function-name(argument declarations){
+	declarations and statements
+}
+```
+- You can define a function that does nothing and returns nothing like:
+```c
+nothing() { }
+```
+- The function above returns nothing, but the compiler or something assumes it returns an `int` whose value is 0.
+- At the top level scope, a program consists of a group of definitions of variables and functions. Functions communicate with each other through arguments, returned values and external variables. It doesn't matter what order functions are in in a source file. They can also be spread over multiple source files, but a function must be defined in one file and cannot be split among multiple files. 
+- A function can **`return`** any kind of expression including a function call.
+- There is also some imprecise bullshit about if `return` needs to be followed by an expression or not, and that it's legal but can result in problems, etc. 
+- To compile a multiple-file program, you'd do something like this:
+```
+gcc file0.c file1.c file2.c
+```
+
+### Functions Returning Non-Integers:
+- When your function returns a value of a non-integer type, you really need to use a function prototype atop the calling function, or declare the function as you would declare an external variable that is defined elsewhere but you don't need the `extern` keyword. You shouldn't rely on the compiler to figure this for you. Those automatic conversions that C does are another of C's curses. This is especially pernicious _(I learned this word from this book)_ in multiple-file programs. Let's say we have defined a function `baba` that converts a string of characters to a `double`. To make use of that value in our `main` function, we need to redeclare the function within our `main` body. This looks a little weird, but it works and it would save us a lot of headaches:
+```c
+int main(){
+	double baba(char []); // Is this a variable? a functon call?
+	printf("%s\n", baba(-123.33));
+}
+```
+- When the compiler first encounters a name followed by a left parenthesis, it assumes the name refers to a function. If it hasn't been told the return type by a function prototype or an explicit declaration, it assumes it returns an `int` and the returned value will be garbage. 
+- The declaration must match the return type of the definition as well as its parameters so that the compiler can interpret the function correctly. Mismatching arguments are as problematic as mismatching return types. 
+- To avoid trouble, the book suggests that we use `void` for arguments to declare a function that takes no arguments:
+```c
+double tata(void); 
+```
+- Something like `tata()` simply means don't assume anything about the arguments. The function might or might not take arguments. *Wow!!! I didn't even know this.*
+
+### External Variables:
+- The global/top level scope in C consists of functions and external variables. Functions themselves cannot be nested in C. External variables are not defined within any particular function which makes them visible to all functions. All references to external variables are references to the same thing, even "from functions compiled separately" in what is called **external linkage**. 
+- There is apparently a way to define external variables and functions accessible only in their source files. _We will apparently see this later!!_
+- When you have many functions that share a lot of data, it might be tempting to use shared external variables instead of passing a bunch of arguments around, but this is generally considered a bad practice! It's probably better to keep functions self-contained instead of having a bunch of functions changing the same variables. It's hard to know when and if a variable has been changed by some function buried in some file deep away from where the external variable is defined.
+- There might be still situations when external variable use can be tolerated because of their higher scope and longer lifetime, but their use should still be limited and done carefully!
+- The book goes on to illustrate that it can sometimes be useful to share external variables between functions when done judiciously.
+- Although an external variable is visible to all functions, it looks like there is some kind of _lexical scoping_ used in a single file _at least_ (Here I am showing my ignorance of a lot of basic things). Anyways, check the following example:
+```c
+#include <stdio.h>
+
+int main(){
+	printf("%d\n", a); // Error: as far as main is conserned 'a' is undeclared.
+}
+
+extern int a  = 44; 
+```
+- The code above results in an error. An external variable defined after a function (in the following lines) is not visible to that function.
+
+
 ## Pointers and Arrays:
 ## Structures:
 ## Input/Output:

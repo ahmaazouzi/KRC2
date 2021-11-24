@@ -329,13 +329,110 @@ double tata(void);
 #include <stdio.h>
 
 int main(){
-	printf("%d\n", a); // Error: as far as main is conserned 'a' is undeclared.
+	printf("%d\n", a); // Error: as far as main is concerned 'a' is undeclared.
 }
 
 extern int a  = 44; 
 ```
 - The code above results in an error. An external variable defined after a function (in the following lines) is not visible to that function.
 
+### Scoping:
+- Scope rules in C might be a little confusing considering how external variables behave the visibility of functions and programs across multiple files and how previously compiled files can be loaded to be used files to be compiled. 
+- Consider the following example:
+```c
+#include <stdio.h>
+int i;
+
+main(){
+	printf("%d\n", i); // error: i not acessible
+	return 0;
+}
+
+int i = 44;
+```
+- `i` is not visible by `main()`, but in the following example, a new value of `i` that it acquired after the main lexical block closing is visible to `main`. I find this a little irritating:
+
+```c
+#include <stdio.h>
+
+main(){
+	printf("%d\n", i);
+	return 0;
+}
+
+int i = 44;
+```
+- The book defines **scope** of a name as the part of the program where the name can be used. So it's the scope of a name. I always thought the scope is that of a function or something an what the function can and cannot use. I looked at things from the function's perspective rather than the variable's perspective.
+- Local variables declared on top of the function are visible within the function's body. Parameters are also visible to the rest of the function. They are effectively Local variables. Local variables and parameters are only visible within the function.
+- The scope of an external variable or a function "lasts from the point at which it is declared to the end of the file being compiled".
+- "If an external variable is to be referred before it is defined, or if it is defined in a different source file from the one where it is being used, then an `extern` declaration is mandatory."
+- The book returns to stressing the difference between a _declaration_ and a _definition_. This is more of an issue in the context of external variables:
+	- A **definition** declares a variable, sets the properties of that variable (its _type_) and causes storages to be allocated for the defined variable. The following example names variables and reserves a chunks of memory for them:
+```c
+int index;
+char line[MAXVAL];
+```
+	- A **declaration** on the other hand only announces to the rest of the file that an external variable of such and such type has been declared somewhere in the program (possibly an external file). It doesn't create a new variable, nor does it set aside storage for it. The following declarations announces to the file that there is an external variable of type `int` and external array of characters available for use:
+```c
+extern int index;
+extern char line[];
+``` 
+- Obviously, there can only be one _definition_ of an external variable in all the files of the source program. Other files need the specifier `extern` to be able to use that variable. `extern` can also be used within the file where the variable is defined, but is probably not necessary. Array sizes must be specified in the definition, but are optional with declarations.
+- The books says that an external variable initialization "goes only with the definition". I tried this and  cc only give a warning. 
+
+### Header Files:
+- Instead of defining and declaring a a bunch of external variables all over the place or also declaring functions and using function prototypes all over the place, you can group your external variables and function declarations in one or more **header files** and then only use the construct **`#include`** to make these definitions and declarations available to the file where `#include` is included! The following example is of how a header file would look like. A header file ha the extension `h`. The book calls this header file `calc.h`: 
+```c
+#define NUMBER '0'
+void push(double);
+double pop(void);
+int getop(char []);
+int getch(void);
+void ungetch(int);
+
+```
+- Smaller programs usually only need one header file, but as the program gets more complex, more header files might be needed as you don't want every part of the program to have access to all variables which would create conflicts maybe and a lot of confusion. 
+
+### Static Variables:
+- You can limit the use of an external variable to the file where  it is defined through the use of **`static`** declarations. The compiler acted weird though when I tried this. If I declare an external variable with `extern` but don't initialize it, I get a compile-time error. If I declare the variable and initialize it, I get a warning. If I declare it without the `extern` keyword, everything goes well.
+- `static` can also be applied to function names, thus making these functions private only to the source files where they were defined. 
+- `static` can be even applied to function local variables, but its effect on local variables is radically different from that of external ones. A static local variables doesn't comes and goes after the function exists. Its value persists after the function exists. 
+```c
+#include <stdio.h>
+
+void dada(){
+	static int a = 0;
+	printf("%d\n", a++);
+}
+
+int main(){
+	dada();
+	dada();
+	dada();
+}
+```
+- The code above prints the following values:
+```
+0
+1
+2
+```
+
+### Register Variables:
+- A **register variable** is one you declare with the **`register`** key word. This advises the compiler to place the variable in a register because this variable will be heavily used. The compiler might just ignore this advice:
+```c
+register int x;
+```
+- Only an automatic variable and a parameter of a function can be a register variable. 
+- Unfortunately:
+	- Only a few variables can be placed in registers and only certain data types are allowed to be register variables.
+	- Too many register variables are harmless and can just be ignored by the compiler, but you can't get the address of a register variable even if that register variable is not actually placed in a register!
+	- Details of how many and what type of register variables are allowed depend on the specific hardware. 
+
+### Block Structure:
+### Initialization:
+### Recursion:
+### The C Preprocessor:
 
 ## Pointers and Arrays:
 ## Structures:

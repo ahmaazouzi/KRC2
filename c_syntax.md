@@ -430,9 +430,56 @@ register int x;
 	- Details of how many and what type of register variables are allowed depend on the specific hardware. 
 
 ### Block Structure:
+- C is not block structured in the sense you cannot define functions within functions as you'd in say Javascript. However, variables are block scoped. A variable declared and initialized in a block is only visible within that block. This block can be anything: a function's body, a compound statement that is part of a loop or a conditional, or even a free standing block. The following examples shows such a free-standing block. `a` is visible for the first print statement which is executed within the block. The second print statement  wrong because it is outside the block trying to access its inside: 
+```c
+#include <stdio.h>
+
+int main(){
+	{
+		int a = 30;
+		printf("%d\n", a);
+	}
+	printf("%d\n", a); // error
+}
+```
+- A variable declared and initialized in a block is initialized each time the block is entered. A static variable declared and initialized within a block is only initialized the first time the block is entered.
+- Again, block-scoped variables do also hide variables with the same names that are external to the block. Avoid hiding variables at all cost as it tend to create a great deal of confusion.
+
 ### Initialization:
+- Basic rules of how variables are initialized in C include:
+	- Uninitialized external variables default to zero. Uninitialized automatic and register variables are garbage.
+	- Initialization is done by following the declaration with the assignment operator and an expressions.
+	- Only _constant expressions_ can be used to initialize external variables. A **constant expression** is made of one more literal values and operators, eg: `20 + 4`, `"Java is easy!"`, `555`. Automatic and register variables can be initialized with any valid expressions including expressions containing previously defined variables or function calls. The book states that automatic variable initializations are glorified assignments. It's a matter of style initialize variables during declaration or closer to where they need to be used.
+	- An array can be initialized to constant values. In this case, the array length need not be specified as in `int nums[] = {1, 2, 3, 4, 5}`. If you define an external array without a size and initializers, gcc in Mac only throws a warning and explain that an array without a size is assumed to have one element. Trying the same thing with an automatic array results in an error. 
+	- Too many array initializers might result in error.
+	- To you cannot initialize an element in the middle of the array without initializing all the element that precede it. 
+	- A character array can be initialized using either one of the following ways. They are totally the same thing:
+```c
+char name[] = {'n', 'a', 'm', 'e', '\0'};
+```
+```c
+char name[] = "name";
+```
+
 ### Recursion:
+- C like most other languages supports recursion so if you're into recursion then you're at home. 
+
 ### The C Preprocessor:
+- **Preprocessing** is a separate step of compilation. The **C preprocessor** does a few things we've already seen: namely including the contents of a file during compilation with the **`#include`** statement, and replacing tokens with "arbitrary sequences of characters" with **`#define`**. The preprocessor also offers useful capabilities such as conditional compilation and macros with arguments.
+
+#### File Inclusion:
+- File inclusion allows you to add groups of `#define` statements and external variable and function declarations (and probably some other tings). Instead of having to declare a bunch of these on top of your file, you can simply use one of the following two statements to do so:
+```c
+#include <stdio.h>
+#include "mylife_potato.h"
+```
+- If the filename to be used is in double quotes like `"mylife_potato.h"`, searching for the file starts where your code file is found, but if it is surrounded by diamond hands `<` and `>` as in `<stdio.h>` the search is done based on implementation where C is being used. 
+- Header files themselves use `#include` and can include declarations and definitions from other header files.
+- If you include header file H1 in your source file, and this header file happens to have included header file H2, then declarations made in H2 are indirectly accessible by your source file. 
+- File inclusion provides a consistent way of accessing declaration and definitions to parts of the program that share these. If you change a declaration in an inclusion file, all source files that depend on it need to be recompiled. 
+
+#### Macro Substitution:
+#### Conditional Inclusion:
 
 ## Pointers and Arrays:
 ## Structures:

@@ -464,10 +464,10 @@ char name[] = "name";
 ### Recursion:
 - C like most other languages supports recursion so if you're into recursion then you're at home. 
 
-### The C Preprocessor:
+## The C Preprocessor:
 - **Preprocessing** is a separate step of compilation. The **C preprocessor** does a few things we've already seen: namely including the contents of a file during compilation with the **`#include`** statement, and replacing tokens with "arbitrary sequences of characters" with **`#define`**. The preprocessor also offers useful capabilities such as conditional compilation and macros with arguments.
 
-#### File Inclusion:
+### File Inclusion:
 - File inclusion allows you to add groups of `#define` statements and external variable and function declarations (and probably some other tings). Instead of having to declare a bunch of these on top of your file, you can simply use one of the following two statements to do so:
 ```c
 #include <stdio.h>
@@ -478,8 +478,88 @@ char name[] = "name";
 - If you include header file H1 in your source file, and this header file happens to have included header file H2, then declarations made in H2 are indirectly accessible by your source file. 
 - File inclusion provides a consistent way of accessing declaration and definitions to parts of the program that share these. If you change a declaration in an inclusion file, all source files that depend on it need to be recompiled. 
 
-#### Macro Substitution:
-#### Conditional Inclusion:
+### Macro Substitution:
+- **Macros** seem like variables or something but without type safety!! I don't know!!! It allows you to give names to values or even entire statements and stuff. The preprocessor replaces these macros with appropriate _C code (I DON"T KNOW)_. A macro can also have other macros in it.
+- These beasts can be as simple as:
+```c
+#define POTATO "My live is potato!"
+```
+- They can also be more complex such as:
+```c
+#define counter(i) int b = i; while(b >= 0) {printf("%d\n", b--);}
+```
+- The example almost seems like we've defined a new function. A more complete example containing the above two definitions can be done a follows:
+```c
+#include "stdio.h"
+#define POTATO "My live is potato!"
+#define counter(i) int b = i; while(b >= 0) {printf("%d: %s\n", b--, POTATO);}
+
+int main(){
+	counter(10);
+	return 0;
+}
+```
+- Macro substitutions only occur for tokens and not in strings or tokens that contain macro tokens. For example `"POTATO"` and `POTATOS` will not substituted if our definition is `POTATO`.
+- Cool examples of macro magic include the following examples:
+```c
+#define DIV(t, a,b) (t) a / (t) b // Divides numbers of t type.
+#define forever for (;;) // Create an infinite loop
+```
+- As you can see from the examples above, macros can even have arguments and somehow behave like functions. Check the following example:
+```c
+#define max(A, B) ((A) > (B)  ?  (A) : (B)) // evalutes to the larger one of the two values A and B.
+```
+- The use of this macro seems like a function call:
+```c
+x = max(a + b, c + d;
+```
+- It's not a function call, however, and it merely expands to the following:
+```c
+x = ((a + b) > (c + d) ? (a + b) : (c + d));
+```
+- A macro will work for any type of argument so there no need to define different macros for different data types.
+- Macros however are not universally loved and they can result in weird behavior.
+- For example `max(a++, b++)` is wrong because the larger of the two values will be incremented twice, first before the comparison and then after. 
+- There are other examples of weird behavior such as:
+```c
+#include "stdio.h"
+#define SQUARE(a) a * a
+
+SQUARE(5+1); // Wrong
+
+```
+- To get the correct behavior, you need to surround the expression with parentheses as in:
+```c
+SQUARE((5+1));
+```
+- Macros can result in faster code because they can replace functions in certain cases. Function calls are costly so macros can do the same job faster. Macros are used in the standard libraries. Examples include `putchar` and `getchar` from `<stdio.h` which avoid a function call for the processing of each character.
+- Defined names can be undefined using the **`#undef`** statement, so you can actually undefine something like `getchar` to ensure that it's called as a function rather expanded as a macro `#undef getchar`.
+- *Enough of this voodoo!!!*
+
+### Conditional Inclusion:
+- Very briefly, you can include files and define things conditionally. The following examples should be illustrative enough:
+```c
+#if SYSTEM == SYSV
+	#define HDR "sysv.v"
+#elif SYSTEM == BSD
+	#define HDR "bsd.h"
+#elif SYSTEM == MSDOS
+	#define HDR "msdos.h"
+#else
+	#define HDR "default.h"
+#endif
+	#include HDR
+```
+- We are basically checking what type of system is being used and including the appropriate header file based on that.
+- You can also check if something is not defined and then define it if it's not. This is usually done with the following construct:
+```c
+#ifndef HDR
+#define HDR
+
+/* bla bla bla */
+
+#endif
+```
 
 ## Pointers and Arrays:
 ## Structures:

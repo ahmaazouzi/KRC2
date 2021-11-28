@@ -1,4 +1,53 @@
-# Notes on C Syntax:
+# C Syntax, the Basics:
+
+## Table of Contents:
+* [Table of Contents](#table-of-contents)
+* [Intro](#intro)
+* [Preliminaries](#preliminaries)
+	+ [Symbolic Constants](#symbolic-constants)
+	+ [var1 = var2 = var3 = 0](#var1-=-var2-=-var3-=-0)
+	+ [Arrays](#arrays)
+	+ [Functions](#functions)
+	+ [Character Arrays](#character-arrays)
+	+ [External Variables and Scope](#external-variables-and-scope)
+	+ [Declaration vs. Definition](#declaration-vs-definition)
+* [Types, Operators and Expressions](#types-operators-and-expressions)
+	+ [Names](#names)
+	+ [Data Types and Size](#data-types-and-size)
+	+ [Constants/Literals](#constants/literals)
+		+ [Integers and Floating-Points](#integers-and-floating-points)
+		+ [Characters](#characters)
+		+ [Constant Expressions](#constant-expressions)
+		+ [String Constant](#string-constant)
+		+ [Enumeration Constants](#enumeration-constants)
+	+ [Declarations](#declarations)
+	+ [`const`](#const)
+	+ [Arithmetic Operators](#arithmetic-operators)
+	+ [Logical Operators](#logical-operators)
+	+ [Type Conversions](#type-conversions)
+		+ [`char` Arithmetic](#char-arithmetic)
+	+ [Increment vs. Decrement](#increment-vs-decrement)
+* [Conditional Expression with the Ternary Operator](#conditional-expression-with-the-ternary-operator)
+* [Control Flow](#control-flow)
+	+ [Statements and Blocks](#statements-and-blocks)
+	+ [If-else and Else-if](#if-else-and-else-if)
+* [Functions and Program Structure](#functions-and-program-structure)
+	+ [Function Basics](#function-basics)
+	+ [Functions Returning Non-Integers](#functions-returning-non-integers)
+	+ [External Variables](#external-variables)
+	+ [Scoping](#scoping)
+	+ [Header Files](#header-files)
+	+ [Static Variables](#static-variables)
+	+ [Register Variables](#register-variables)
+	+ [Block Structure](#block-structure)
+	+ [Initialization](#initialization)
+	+ [Recursion](#recursion)
+* [The C Preprocessor](#the-c-preprocessor)
+	+ [File Inclusion](#file-inclusion)
+	+ [Macro Substitution](#macro-substitution)
+	+ [Conditional Inclusion](#conditional-inclusion)
+
+## Intro:
 - These notes for myself picked from _The C Programming Language_ focused mainly on things particular to C, especially those that make it in a class of languages different the class of languages that includes Java and Python; Things like pointers, macros, Loose typing and dynamic memory management. I will mostly skip parts where C is identical to Java (at least syntactically). I will probably spend half the time on pointers, structures and memory allocation and use outside sources to help understand how these work. My notes on the memory chapters from *Computer Systems, a Programmer's perspective* will be especially helpful here. 
 - I spent most of the last third of 2018 going though exercises in the book and focused too much on the exercises and didn't give myself time to understand and remember the particularities of C. If I have time, I might revisit some of those exercises. 
 - The main reason for writing these notes is to have them around in an easily searchable format is googling tends to be distracting and would usually throw me in inescapable rabbit holes.
@@ -560,9 +609,3 @@ SQUARE((5+1));
 
 #endif
 ```
-
-## Pointers and Arrays:
-## Structures:
-## Input/Output:
-## UNIX Interface:
-## Notes on the Standard Library:

@@ -94,7 +94,117 @@ int main(){
 }
 ```
 
+## Pointers and Arrays:
+- It might be safe to say that arrays are syntactic sugar over pointers. The two are extremely related that the would be better discussed together. Anything you can do with array indexing/subscripting, you can achieve with pointers. Pointer operations that do the same things done with array subscripting are faster but are harder to understand for us mere mortals. Let's go over this step by step and try to nail it. 
+- The following declaration defines an array `a` of size 10. It is a block of 10 consecutive `int` objects {`a[0]`, ..., `a[9]`}:
+```c
+a[10];
+```
+- The following snippet declares a pointer `*pa` and assigns the first element in the array `a` to it:
+```c
+int *pa;
+pa = &a[0];
+```
+- This means `pa` now contains the address of `a[0]`. The following assignment copies the contents of `a[0]` which are pointed to by `pa` to `x` provided that `x` is of type `int`:
+```c
+x = *pa;
+```
+- Other totally legal syntax for using pointer notation to access arrays include:
+```c
+*pa = a[0]; // No need for the & operator
+*a;  // You can use this directly on an array a[] that is declared as an array.
+```
+- A pointer can point to any element within the array through the use of a notation that looks similar to array subscripting so that `pa + i` for example is equivalent to `a[i]`will point to the `i`th element of the array if `pa` itself points to the zeroth element of the array. You can also use `pa - i` if `pa` points to an element in the array is is smaller than the index point to. If `pa` point to `a[5]` then `pa - 3` points to `a[2]`. 
+- Accessing the content of an array element pointed to by our pointer is obviously done with our dereference operator as in:
+```c
+*(pa + i);
+```
+- These rules/remarks are true regardless of the size of arrays to the data type they contain. Remember, pointer arithmetic mainly means that something like `pa + 1` points to the next object in an array or whatever. It points to the next memory object of the same size as what's being pointed to currently, and since arrays are blocks of contiguous memory cells, then that holds true as well. 
+- The following three statements do the exact same thing:
+```c
+pa = &a[0];
+pa = a[0];
+pa = a;
+```
+- The following two expressions refer the exact same thing which is `a[0]`:
+```c
+*a;
+*(&[0]);
+```
+- When `a` is declared/defined as an array `a[]` then `a` itself is for all intents and purposes a pointer.
+- `a[i]` is equivalent to `*(a + i)`. This means that `&a[i]` is the same as `a + i` which is basically the memory address of the `i`th element in the array `a`.
+- If pointer `pa` points to a`0` then `pa` itself can be used with subscripting: `pa[i]` is the same as `*(pa + i)`.
+- *Be careful, though! I declared a string as a char pointer and couldn't change its contents with pointer or array arithmetic. I kept getting this `bus error: 10` thing error!*
 
+### Where Array Names and Pointers Don't Behave the Same:
+- A bigger problem is that while you can readily use pointer syntax when handling an array or use array syntax with a pointer that points to an array, you cannot treat a pointer as an array and there are things you can do with pointers that you cannot do with arrays.
+- Assigning an array name to a pointer with `pa = a`, and incrementing a pointer with `p++` are totally legal operations, but the assigning an array to a pointer `a = pa` or trying to increment an array name are totally wrong `a++`.
+- The greater flexibility pointers have can allow you to manipulate arrays in ways in you probably couldn't do with plain old array notation. The book suggests a version of `strlen` (for obtaining the length of a string) that exploits the flexibility of pointer syntax:
+```c
+int strlen(char *s){
+	int n;
+
+	for (n = 0; *s != '\0'; s++)
+		n++;
+
+	return n;
+}
+```
+- You can pass an array name to `strlen` since an array name is basically a pointer and all the following function calls are legal:
+```c
+strlen("zzzzzz");
+strlen(ar); // for char ar[100];
+strlen(ps); // char *ps;
+
+```
+- A pointer can be incremented within the function and manipulated in other ways, and since it's a private variable within the calling function it shouldn't really affect the passed array (unless you dereference it, of course).
+- Although defining `char *s` or `char s[]` as parameters to a function can act the same, the book encourages us to rather use `char *s`. You can pass either an array or a pointer where a pointer is a parameter, but passing a pointer to where an array is defined comes with a baggage of segmentation faults and compiler warnings about attempted conversions from arrays to pointers. 
+
+## Address Arithmetic:
+- If pointer `p` points to an element in an array, `p++` points to the next elements and `p += i` points `i`th object in the array after what's being currently pointed to. Such operations are called collectively **address arithmetic**. *I don't know if this only refers to pointers pointing to array elements*. 
+- To illustrate aspects of address arithmetic the book jumps headlong into implementing a basic memory management package which looks as follows:
+```c
+#define ALLOCSIZE 10000
+
+static char allocbuf[ALLOCSIZE];
+static char *allocp = allocbuf;
+
+char *alloc(int n){
+	if (allocbuf + ALLOCSIZE - allocp >= n){
+		allocp += n;
+		return allocp - n;
+	}
+	else
+		return 0;
+}
+
+void afree(char *p){
+	if (p >= allocbuf && p < allocbuf + ALLOCSIZE)
+		allocp = p;
+}
+```
+- The code mostly clear in light of what we've seen so far. It's based on the interplay between pointers and arrays. `alloc` allocates chunks of memory to the array that starts at address `allocbuf` as long as these chunks don't go beyond the bounds of the array bounded by `ALLOCSIZE`. Each time we call `alloc` it sets the global pointer `allocp` (global only within this file because `static`) to the end of the allocated chunk, but it returns the current value of `allocp`. This current value of `allocp` will next be used by `afree` to free the last `alloc`ed chunk. 
+- One interesting remark about the code above is that the value zero can be used as a pointer value. Constant zero is a valid value for a pointer but zero itself is never a valid data address so it is used to signal that something went wrong.
+- `0` or more appropriately `NULL` which is defined in `stdio.h` is special pointer value generally used to signal problems or do other things. It's something like `EOF` in character IO.
+
+### Allowed Address Arithmetic Operations:
+- You can compare and check for equality between two pointers if they belong to the same array with such operators as `==`, `!=`, `<`, `>=`. You can also check of the a pointers equals `NULL`. You can also use the address of the first element past the end of the array in address arithmetic. The behavior of comparing pointers pointing to elements that don't belong to the same array is undefined. 
+- You can also add an `n` integer to a pointer to point to the `n`th element after the pointer. This works regardless of the data type of the pointer. The value of `n` is _scaled_ by the size of given pointer data type. 
+- You can also use subtraction to have your pointer point to previous elements in the array. 
+- In summary:
+	+ You can assign pointers of the same type.
+	+ You can add and subtract a pointer and an integer.
+	+ You can subtract two pointers belonging to the same array.
+	+ You can compare two pointers belonging to the same array.
+	+ You can assigns and compare a pointer to `NULL`.
+- All other pointer operations are illegal including:
+	+ You cannot add or subtract two pointers.
+	+ You cannot involve a pointer in a division, multiplication, masking or shift operation. 
+	+ You cannot add or subtract a `float` or `double` to/from a pointer.
+	+ You cannot assign a pointer to another pointer of a different type without a cast, except for the special pointer **`void *`** which we will see later. 
+
+## Character Pointers and Functions:
+- 
 
 
 

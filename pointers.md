@@ -204,7 +204,62 @@ void afree(char *p){
 	+ You cannot assign a pointer to another pointer of a different type without a cast, except for the special pointer **`void *`** which we will see later. 
 
 ## Character Pointers and Functions:
-- 
+- A a **string constant** like `"Hello, world!"` is an array of characters terminated by a null character `'\0'` that is not shown in the constant, but it is actually there. The length of a string constant is the number of characters it contain plus the null character. 
+- A string constant usually appears as an argument to a function as in `printf("Hello, world!")`. In this case, `printf` receives a pointer to the first character of the string. So a string constant can also be defined using a pointer as in:
+```c
+char *cp;
+cp = "Hello, world!";
+```
+- We have previously seen array characters and now we will look at strings as pointers:
+```c
+char *charP = "Hello, world!";
+char charA[] = "Hello, world!";
+```
+- The two definitions above define 2 strings whose content is the same: `"Hello, world!"`, but there are some fundamental differences between the two definitions, name a string defined as a character array vs. a string defined as a character pointer.:
+	- `charA` Always refers to the same storage (one block of memory), but the contents of this memory block can be changed.
+	- `charP` is a pointer initialized to point to a string constant. `charP` may be modified to point to another character or string constant. However if you try to modify the contents of the string defined by/pointed to by `charP` you'd get an undefined behavior. 
+
+### Copying a String:
+- `string.h` provides many basic string manipulation functions such `strcpy` which copies it's send argument to its first argument. `strcpy` is basically defined as:
+```c
+ void strcpy(char *s, char *t){
+ 	while ((*s++ = *t++))  // same as ((*s = *t) != '\0'){s++; t++; }
+ 		;
+ 	}
+ }
+ ``` 
+ - *To be honest, I still don't know how the construct above copies the null character. Ok, what seems to be happening is that each character from `t` is first fetched, copied to `s` and then incremented because we are using postfix increment. The evaluation of whether `t` equals `\0` happens after the character is already copied.. I don't know!! Main thing to know is that when the assignment happens before the functions knows that the last character is a `\0`. Maybe the incrementation happens after this evaluation.*
+ - We are passing pointers to `strcpy` but we are passing them by value still, incrementing `s`, and `t` doesn't change the actual pointers! We are basically just copying the values of pointers to the function. *This might seem a little counter-intuitive, if not straight confusing because one of the reasons we use pointers in the first place is to avoid the shortcomings of passing by value. I have actually tried testing my understanding of this point by devising the following nonsensical example for swapping two strings. In this example, I am passing pointers to a function by reference rather than by value using the `&` operand:*
+```c
+#include <stdio.h>
+
+void swappo(char **s, char **t){ // note pointers to pointers
+	char *temp = *s;
+	*s = *t;
+	*t = temp;
+}
+
+int main(){
+	char *s = "SSS";
+	char *t = "TTT";
+
+	swappo(&s, &t);
+
+	printf("S is: %s\n", s); //prints TTT
+	printf("T is: %s\n", t); // prints SSS
+}
+ ```
+
+### Idiomatic Pushing unto/Popping from a Stack:
+- The following two idioms are used for pushing unto and popping from a stack:
+```c
+ *p++ = val; // push: assigns val to p then increment pointer.
+ val = *--p; // pop: assign current value of p to val then decrement p.
+``` 
+
+## Pointer Arrays, Pointers to Pointers:
+- This section deals of _arrays of pointers_. Pointers themselves, like any other kind of variable, can also be placed nicely into arrays. To illustrate the importance of such a data structure, the book suggests sorting a group of strings
+![Sorting strings](img/sortStrings.png)
 
 
 

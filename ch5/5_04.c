@@ -1,7 +1,9 @@
-#include <stdio.h>
-#include <string.h>
-#define OUT 0
-#define IN 1
+/*
+December 2021: The older version required the use of <string.h> and missed some edge cases like
+empty strings and sometimes identical strings.
+*/
+
+#include <stdio.h> 
 
 int strend(char *, char *);
 
@@ -14,9 +16,18 @@ int main(){
 }
 
 int strend(char *s, char *t){
-	int state = OUT;
+	char *tb = t;
+	while (*s){
+		if (*s == *t){
+			t++;
+		} 
+		else {
+			t = tb;
+		}
+		s++;
+	}
 
-	while (*s++ && strlen(s) >= strlen(t))
-		state = (*s == *t) ? IN : OUT;
-	return state;
+	if (*s == '\0' && *s == *t)
+		return 1;
+	return 0;
 }

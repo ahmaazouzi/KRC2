@@ -20,7 +20,16 @@ void strncppy(char *s, char *t, int n){
 	int p = 0;
 	while (p < n && (*s++ = *t++))
 		p++;
+	*s = '\0';
 }
+
+// alternative strncppy:
+// void strncppy(char *s, char *t, int n){
+// 	int z;
+// 	for (z = 1; (z <= n) && (*s++ = *t++); ++z)
+// 		;
+// 		*s-- = '\0';
+// }
 
 void strncatt(char *s, char *t, int n){
 	int p = 0;
@@ -37,6 +46,16 @@ int strncmpp(char *s, char *t, int n){
 		if (*s == '\0')
 			return 0;
 		p++;
+	}
+	return *s - *t;
+}
+
+int strncmpp(char *s, char *t, int n){
+	int p = 1;
+
+	for (; (*s == *t) && p++ < n ; s++, t++){
+		if (*s == '\0')
+			return 0;
 	}
 	return *s - *t;
 }

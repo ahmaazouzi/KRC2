@@ -42,17 +42,6 @@ void strncatt(char *s, char *t, int n){
 int strncmpp(char *s, char *t, int n){
 	int p = 1;
 
-	for (; (*s == *t) && p < n ; s++, t++){
-		if (*s == '\0')
-			return 0;
-		p++;
-	}
-	return *s - *t;
-}
-
-int strncmpp(char *s, char *t, int n){
-	int p = 1;
-
 	for (; (*s == *t) && p++ < n ; s++, t++){
 		if (*s == '\0')
 			return 0;

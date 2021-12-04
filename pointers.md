@@ -258,7 +258,7 @@ int main(){
 ``` 
 
 ## Pointer Arrays, Pointers to Pointers:
-- This section deals with _arrays of pointers_. Pointers themselves, like any other kind of variable, can also be placed nicely into arrays. To illustrate the importance of such a data structure, the book uses it to sort the lines of a given text. The [program](storlines.c) basically read its input extract lines as strings and stores them in a buffer. It also maintains an array of pointers. These pointers point to each of the buffered strings representing the lines. To sort the lines, the program doesn not actually sort the lines themselves which would be cumbersome and probably costly. Instead only the pointers to these lines are sorted as the following diagram shows:
+- This section deals with _arrays of pointers_. Pointers themselves, like any other kind of variable, can also be placed nicely into arrays. To illustrate the importance of such a data structure, the book uses it to sort the lines of a given text. The [program](sortlines.c) basically read its input extract lines as strings and stores them in a buffer. It also maintains an array of pointers. These pointers point to each of the buffered strings representing the lines. To sort the lines, the program doesn not actually sort the lines themselves which would be cumbersome and probably costly. Instead only the pointers to these lines are sorted as the following diagram shows:
 ![Sorting strings](img/sortStrings.png)
 - To write the lines to output, the array of ordered pointers is traversed and the correctly-ordered lines are printed to output.
 

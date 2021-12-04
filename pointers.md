@@ -3,13 +3,13 @@
 - _I've managed to mess everything I've touched in the last 9 years! Let me not mess this one up! Let's do this thing step by step and demystify it once and for all._
 - A **pointer** is a variable that contains the address of another variable.
 - Pointers are important in C because they are sometimes the only to do certain computations. They can also result in "compact and efficient code".
-- Pointers and arrays are closely related so this sections tries to study both of them.
+- Pointers and arrays are closely related so this sections will try to study both of them.
 - Pointers have a dreadful reputation because some programmers use them to create hard to understand code and it's easy to misuse them. We will try to understand how they work.
 - *Actually the main reason I am rereading the book is pointers*.
 
 ## Pointers and Addresses:
 - Memory can be viewed as a large "array of consecutively numbered or addressed memory cells that may be manipulated individually or in groups". A `char` for example is a single byte _(does a memory cell always have a one-byte size?)_, a `short` is two bytes, an int is probably 4 bytes. A pointer is a group of 2, 4 or 8 cells tht hold an address. The machine on which this is typed has a pointer size of 8 bytes. 
-- C provides with two important unary operators for handling and manipulating pointers, namely **`&`** and **`*`**.
+- C provides two important unary operators for handling and manipulating pointers, namely **`&`** and **`*`**.
 - The unary operator **`&`** allows us to extract the memory address of a variable as in:
 ```c
 p = &c;
@@ -258,9 +258,9 @@ int main(){
 ``` 
 
 ## Pointer Arrays, Pointers to Pointers:
-- This section deals of _arrays of pointers_. Pointers themselves, like any other kind of variable, can also be placed nicely into arrays. To illustrate the importance of such a data structure, the book suggests sorting a group of strings
+- This section deals with _arrays of pointers_. Pointers themselves, like any other kind of variable, can also be placed nicely into arrays. To illustrate the importance of such a data structure, the book uses it to sort the lines of a given text. The [program](storlines.c) basically read its input extract lines as strings and stores them in a buffer. It also maintains an array of pointers. These pointers point to each of the buffered strings representing the lines. To sort the lines, the program doesn not actually sort the lines themselves which would be cumbersome and probably costly. Instead only the pointers to these lines are sorted as the following diagram shows:
 ![Sorting strings](img/sortStrings.png)
-
+- To write the lines to output, the array of ordered pointers is traversed and the correctly-ordered lines are printed to output.
 
 
 

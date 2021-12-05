@@ -262,7 +262,120 @@ int main(){
 ![Sorting strings](img/sortStrings.png)
 - To write the lines to output, the array of ordered pointers is traversed and the correctly-ordered lines are printed to output.
 
+## Multidimensional Arrays:
+- I've never had to used a multidimensional array, but I am aware of their utility. 
+- They are basically probably a special case of pointers to pointers. They are not used as frequently as the more general pointers to pointers. 
+- You declare a 2D array, for example in any one of the following ways:
+```c
+int multA[2][3];
+int multA2[][2] = {
+	{1,2},
+	{1,2}
+};
+int multA2[2][2] = {
+	{1,2},
+	{1,2}
+};
+```
+- Notice that for declaring a literal array you are required to specify the length of the internal arrays (rows).
+- ***Don't forget: from the this point on to the end of this section, we are talking about passing a multidimensional array as a parameter to a function!! Something like `int (*multA)[2]` might mostly be encountered in function parameter declarations.***
+- When passing a multidimensional array as a parameter to a function, you also need to specify the number of columns as in:
+```c
+void someFunction(int multA[][2]){ ...; }
+```
+- Basically a 2D array, for example, is an array of pointers to rows. Rows are arrays of some primitive data. This means that the above function definition can be written as:
+```c
+void someFunction(int (*multA)[2]){ ...; }
+```
+- We've surrounded `*multA[]` with parentheses because `[]` has a a higher precedence than the dereferencing operator `*`. Without parentheses you'd have the following:
+```c
+void someFunction(int *multA[2]){ ...; }
+```
+- The above definition refers to an array of 2 pointers to objects of type `int`.
+- As a general rule, only the first level of a multidimensional array is allowed to not have size, but all the ones under it must have them.
 
+## Initializing Pointers to Pointers:
+- To appreciate the flexibility a general array of pointers enjoys over a multidimensional array, check the following declaration:
+```c
+char *strA[] = {
+	"one", 
+	"two",
+	"fafa",
+	"Obi one Ka noobie"
+};
+```
+- Here, we declare an array of pointers to `char` arrays. They can have multiple sizes as opposed to multidimensional arrays where rows must be of a fixed size.
 
+## Pointers vs. Multidimensional Arrays:
+- The authors use this section to waffle about the advantages of an array of pointers vs.  a multidimensional array. Basically:
+	- A multidimensional wastes memory as you'd have to allocate ***row · col*** elements, even if your data is of variable sizes and you don't know in advance how big or small your data will be.
+	- Multidimensional arrays might be restrictive as probably one or more pieces of data might exceed the size of rows. If you wanna increase the row size, then you'll to increase it by ***row · col***.
+- The most use case of pointer arrays is to store variable-size strings. Using a multidimensional array for such purpose is totally nonsensical.
+
+## Command-line Arguments:
+- `main` in C is called with two parameters/arguments:
+	- **`argc`** or *argument count* which refers to the number of command-line arguments passed to the program.
+	- **`*argv[]`** or *argument vector* which is a "pointer to an array of character strings that contain the arguments, one per string."
+- Consider the Unix program `echo` which would be used as follows:
+```bash
+echo some stuff yo
+```
+- The program above has been provided 3 arguments, but in reality it has 4 so `argc` is 4.For some reason, the first (zeroth) argument **`argv[0]`** is the name of the program itself `echo`. Arguments are separated by blanks so our arguments are pointers to strings `"echo"`, `"some"`, `"stuff"`, `"yo"`. 
+- **`argv[argc]`** itself is a null pointer probably to signal the end of arguments.
+- At the most basic level, a command-line program `echo` can be written in C as follows:
+```c
+#include <stdio.h>
+
+int main(int argc, char **argv){
+	while (--argc > 0)
+		printf("%s%s", *++argv, (argc > 1) ? " " : "");
+	printf("\n");
+
+	return 0;
+}
+```
+
+## Pointers to Functions:
+- Functions are not variables which limit what you can do with them, but there is a neat workaround. We can define **pointer to function** constructs which can be assigned, passed as arguments to functions, placed in arrays,returned by functions and all what you can do with a generic pointer. 
+- The following program, for example, illustrates how function pointers can bed passed as arguments to other functions making them behave almost like lambdas in other languages:
+```c
+#include <stdio.h>
+
+int add(int a, int b){
+	return a + b;
+}
+
+int sub(int a, int b){
+	return a - b;
+}
+
+void perf(int (*op)(int, int), int a, int b){
+	printf("%d\n", op(a, b));
+}
+
+int main(){
+		int what = 1;
+
+		perf(add, 2, 3);
+		perf(sub, 2, 3);
+
+		perf((int (*)(int, int))(what ? add : sub), 10, 100);
+
+	return 0;
+}
+```
+- When calling a function to which a function pointer is passed, you can choose dynamically at runtime which function to point to.
+- *At the moment, I am having a hard time trying to place a function pointers in an array and generally using them as any regular pointers.*
+- To place function pointers in an array you'd actually do something like the following:
+```c
+int (*opArray[4])(int, int) = {add, sub}; // put the array [] closer to the array name
+```
+- You can now amazingly traverse this array and apply a chain of operations to the two integers!!! NEAT!!!
+
+### Void Pointer:
+- Another important issue this section deals with is the use of the **void pointer** which is a generic pointer that doesn't point to data of a specific type. It can be used during declaration and any type of data an be passed to it and that same data will not be lost, and can be recovered through casting.
+
+## Complicated Declarations:
+- *I had to go through this crap back in 2018 and thought and still thing it hard!*
 
 

@@ -1,4 +1,24 @@
 # Pointers and Arrays:
+## Table of Contents:
+* [Introduction](#introduction)
+* [Pointers and Addresses](#pointers-and-addresses)
+* [Pointers and Function Arguments](#pointers-and-function-arguments)
+* [Pointers and Arrays](#pointers-and-arrays)
+	+ [Where Array Names and Pointers Don't Behave the Same](#where-array-names-and-pointers-dont-behave-the-same)
+* [Address Arithmetic](#address-arithmetic)
+	+ [Allowed Address Arithmetic Operations](#allowed-address-arithmetic-operations)
+* [Character Pointers and Functions](#character-pointers-and-functions)
+	+ [Copying a String](#copying-a-string)
+	+ [Idiomatic Pushing unto/Popping from a Stack](#idiomatic-pushing-unto/popping-from-a-stack)
+* [Pointer Arrays, Pointers to Pointers](#pointer-arrays-pointers-to-pointers)
+* [Multidimensional Arrays](#multidimensional-arrays)
+* [Initializing Pointers to Pointers](#initializing-pointers-to-pointers)
+* [Pointers vs. Multidimensional Arrays](#pointers-vs-multidimensional-arrays)
+* [Command-line Arguments](#command-line-arguments)
+* [Pointers to Functions](#pointers-to-functions)
+	+ [Void Pointer](#void-pointer)
+* [Complicated Declarations](#complicated-declarations)
+
 ## Introduction:
 - _I've managed to mess everything I've touched in the last 9 years! Let me not mess this one up! Let's do this thing step by step and demystify it once and for all._
 - A **pointer** is a variable that contains the address of another variable.
@@ -369,6 +389,42 @@ int main(){
 - To place function pointers in an array you'd actually do something like the following:
 ```c
 int (*opArray[4])(int, int) = {add, sub}; // put the array [] closer to the array name
+```
+- A more complete example is as follows:
+```c
+#include <stdio.h>
+
+int add(int a, int b){
+	return a + b;
+}
+
+int sub(int a, int b){
+	return a - b;
+}
+
+int mult(int a, int b){
+	return a * b;
+}
+
+int div(int a, int b){
+	if (b) return a / b;
+	return -1;
+}
+
+void perf(int (* op)(int, int), int a, int b){
+	printf("%d\n", op(a, b));
+}
+
+int main(){
+	int (*wawa[4])(int, int) = {add, sub, mult, div};
+	int a = 10, b = 3;
+
+	for (int i = 0; i < 4; ++i){
+		perf(wawa[i], a, b);
+	}
+
+	return 0;
+}
 ```
 - You can now amazingly traverse this array and apply a chain of operations to the two integers!!! NEAT!!!
 

@@ -225,11 +225,102 @@ struct {
 	- **`++p->len`** is equivalent to **`++(p->len)`**. It increments len because `len` is very tightly bound to `p` due to high **`->`** precedence.
 	- **`(++p)->len`** increments `p` before accessing `len`.
 	- **`*p->str`** is equivalent to **`*(p->str)`**. Since **`str`** is a pointer, this expression dereferences it.
-
+- *Whatever, the last paragraph was more confusing than anything!!!*
 
 ## Arrays of Structures:
+- By the way, before anything, an array of anything can be a member of a structure.
+- Structures can also be placed in arrays. Imagine we want to have an array of structures to keep track of program's source keywords and the number of their occurrences in some program file. Such an array of structures would be defined as:
+```c
+#define NKWORDS 1000
+
+struct keyword {
+	char *word;
+	int count;
+} keywords[NKWORDS];
+```
+- There is a lot going on in the definition above. We are defining both a structure tagged as `keyword` and an array `keywords[]`of structures of type `keyword`, meaning that the definition above can be expanded into two parts: 1) Declaring the structure `keyword`, and 2) defining an array `keywords[]` containing `NKWORDS` `keyword` structures:
+
+```c
+struct keyword {
+	char *word;
+	int count;
+};
+
+struct keyword keywords[NKWORDS];
+```
+- What's even cooler is that you can initialize such arrays with a literal as in:
+```c
+struct keyword {
+	char *word;
+	int count;
+} keywords[] = {
+	{"char", 0},
+	{"auto", 0},
+	{"register", 0},
+	/* ... */
+	{"comatose", 0}
+};
+```
+- The inner braces in the initializing literal are not always necessary, especially when the stricture consists of a few  simple types or character strings. This definition, then, can be written as:
+```c
+struct keyword {
+	char *word;
+	int count;
+} keywords[] = {
+	"char", 0,
+	"auto", 0,
+	"register", 0,
+	/* ... */
+	"comatose", 0
+};
+```
+- Accessing these structures in the array and their members is also a cake. A given structure in the array can be accessed by its index in the array. The following assignment copies the contents of `keywords[0]` to the struct `charact`
+```c
+struct keyword charact = keywords[0]; // This basically copying since structs are passed value.
+```
+- Accessing the members of a structure in an array is equally easy and is done with indexing:
+```c
+keywords[0].word = "whatever";
+keywords[0].count = 1111;
+```
+
+### `sizeof`:
+- The **`sizeof`** operator allows you to extract of different data sizes including primitive types such as integers, floats, chars, etc. It also extracts the size of such constructs as arrays and structures. Sizes of such data such as arrays and structures are determined at compile time.
+- Imagine initialization an array of structures while defining it and this array's size might change in the future as elements might be added or removed from it. Every time you add or remove an element from the array, you will also need to update its size and it's really easy to forget about changing the size of the array. The solution can be something as hacky as changing the size every time the array size change or ending the array with a null pointer to *terminate traversals (not really sure about this last point. I'm cargo-culting here)*.
+- A better solution is to use `sizeof` to dynamically recalculate the size of the array every time the program is compiled. You do something like the following:
+```c
+#define NWORDS (sizeof keywords / sizeof (struct keyword))
+```
+- You can alternatively divide the array by its first element:
+```c
+#define NWORDS sizeof keywords / sizeof keywords[0]
+```
+- The last way of doing things might be better because the `NWORDS` might contain a different type.
+
 ## Pointers to Structures:
+- There is one important problem explained here (it doesn't even have to do necessarily with structures). Let's say you want to use pointers to get the middle element in an array. You cannot do something like the following:
+```c
+int mid = (high + low) / 2;
+```
+- The reason is that you cannot add two pointers. The correct way is:
+```c
+int mid = low + (high - low).
+```
+- *I've seen the problem  above before in a different context and I think this might be the reason. That was probably implemented in C.*
+- Another problem that also has to do with pointers and arrays is trying to use a pointer outside the bounds of an array. Imagine having an array `arrayWhat[]` of size `SIZE`. `&arrayWhat[-1]` is totally legal, but `array[SIZE]` is illegal to access but is illegal to reference. 
+- One cool thing about traversing an array of structures using pointer notation is that C is smart to move using structure sizes. If `*p` points to the beginning of an array, then `p + 1` points to the second element in the array, and `p++` moves forward one structure at a time.
+- Another issue that I've been wondering about is that the size of a structure is not determined by the size of data types it contains but is rather determined by number of elements multiplied by the largest data size it contains. This is an *alignment* issue (see our notes on computer systems).
+```c
+struct fafa {
+	char a;
+	int zaza;
+};
+```
+- The structure above has a size 8 bytes instead of 5 (at least in x86-64).
+
 ## Self-referential Structures:
+- *This section delves a bit into data structures, mainly linked lists and binary search trees. I'll mostly focus on the C syntax and its usage. I believe it contains some discussion about memory management*.
+
 ## Table Lookup:
 ## `typedef`:
 ## Unions:

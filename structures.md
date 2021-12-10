@@ -9,8 +9,8 @@
 - One of the simplest things that can be represented by a structure is a point in a 2D plane (all planes are 2D, right?!). For such a point we need an x and a y value. Defining a such a structure is done s follows:
 ```c
 struct point {
-	int x;
-	int y;
+    int x;
+    int y;
 };
 ```
 - The **`struct`** keyword is used to declare structures. It's followed by the name of the declaration which is `point` in our example. Following the name is a list of declarations enclosed by braces and separated by semicolons. 
@@ -62,8 +62,8 @@ somePoint.y = 222;
 - A rectangle can then be represented by the previously defined `point` in a structure of the form:
 ```c
 struct rectangle = {
-	struct point pt1;
-	struct point pt2;
+    struct point pt1;
+    struct point pt2;
 }
 ```
 - Imagine we have a variable `screen` of type `rectangle` defined in:
@@ -78,32 +78,32 @@ screen.pt1.x
 
 ## Structure Legal Operations:
 - The only legal operations on structures are:
-	- Copying to a structure and assigning to structure. This includes:
-		- Passing structures are arguments to functions.
-		- Returning structures as values from functions:
-	- Taking a structure's address with `&`.
-	- Accessing members of a structure. 
-	- A structure *may* be initialized with a list of literal member values.
-	- An automatic might be initialized by a assignment.
+    - Copying to a structure and assigning to structure. This includes:
+        - Passing structures are arguments to functions.
+        - Returning structures as values from functions:
+    - Taking a structure's address with `&`.
+    - Accessing members of a structure. 
+    - A structure *may* be initialized with a list of literal member values.
+    - An automatic might be initialized by a assignment.
 - Things you cannot do to a structure include:
-	- Compare two structures.
+    - Compare two structures.
 
 ## Structures and Functions:
 - This sections deals primarily with how structures are passed to/used by functions and not as much with how functions return structures as that is the same everywhere. 
 - Since returning a structure is the same all across let's get it out of the. The following is a declaration of a function that returns a `point` structure:
 ```c
 struct point giveMeAPoint(){
-	struct point someStructure;
+    struct point someStructure;
 
-	// ...
+    // ...
 
-	return someStructure;
+    return someStructure;
 }
 ```
 - As for passing a structure or structure data to a function, it can be done in one of three ways:
-	- Pass separate data components to the function which uses this data to create a structure.
-	- Pass an entire structure to the function.
-	- Pass a pointer to the structure to the function.
+    - Pass separate data components to the function which uses this data to create a structure.
+    - Pass an entire structure to the function.
+    - Pass a pointer to the structure to the function.
 - The following subsections will give examples of each of these 
 
 ### Pass Components Separately:
@@ -114,29 +114,29 @@ struct point giveMeAPoint(){
 struct point { int x; int y;};
 
 struct point makePoint(int x, int y){
-	struct point pt = {x, y};
+    struct point pt = {x, y};
 
-	/*
-	struct point pt;
-	pt.x = x;
-	pt.y = y;
-	*/
+    /*
+    struct point pt;
+    pt.x = x;
+    pt.y = y;
+    */
 
-	return pt;
+    return pt;
 }
 
 int main(){
-	struct point a, b, c;
+    struct point a, b, c;
 
-	a = makePoint(1, 2);
-	b = makePoint(3, 4);
-	c = makePoint(5, 6);
+    a = makePoint(1, 2);
+    b = makePoint(3, 4);
+    c = makePoint(5, 6);
 
-	printf("a.x: %d,  a.y: %d\n", a.x, a.y);
-	printf("b.x: %d,  b.y: %d\n", b.x, b.y);
-	printf("c.x: %d,  c.y: %d\n", c.x, c.y);
+    printf("a.x: %d,  a.y: %d\n", a.x, a.y);
+    printf("b.x: %d,  b.y: %d\n", b.x, b.y);
+    printf("c.x: %d,  c.y: %d\n", c.x, c.y);
 
-	return 0;
+    return 0;
 }
 ```
 
@@ -144,11 +144,11 @@ int main(){
 - At the most basic level, you'd pass some structure to a function and modify its members or maybe use it to create new structures. The following example creates a `rectangle` from existing points:
 ```c
 struct rectangle makeRec(struct point pt1, struct point pt2){
-	struct rectangle rec;
-	rec.pt1 = pt1;
-	rec.pt2 = pt2;
+    struct rectangle rec;
+    rec.pt1 = pt1;
+    rec.pt2 = pt2;
 
-	return rec;
+    return rec;
 }
 ```
 
@@ -171,36 +171,36 @@ printf("Some point is (%d, %d)\n", (*pp).x, (*pp).y);
 struct point { int x; int y;};
 
 struct rectangle {
-	struct point pt1;
-	struct point pt2;
+    struct point pt1;
+    struct point pt2;
 };
 
 struct rectangle makeRec(struct point *pt1, struct point *pt2){
-	struct rectangle rec;
-	rec.pt1.x = pt1->x;
-	rec.pt1.y = pt1->y;
-	rec.pt2.x = pt2->x;
-	rec.pt2.y = pt2->y;
+    struct rectangle rec;
+    rec.pt1.x = pt1->x;
+    rec.pt1.y = pt1->y;
+    rec.pt2.x = pt2->x;
+    rec.pt2.y = pt2->y;
 
-	return rec;
+    return rec;
 }
 
 int main(){
-	struct point *pp1, *pp2;
-	struct point pt1 = {22, 33};
-	struct point pt2 = {44, 66};
-	pp1 = &pt1;
-	pp2 = &pt2;
+    struct point *pp1, *pp2;
+    struct point pt1 = {22, 33};
+    struct point pt2 = {44, 66};
+    pp1 = &pt1;
+    pp2 = &pt2;
 
-	printf("pt1 is (%d, %d)\n", pp1->x, pp1->y);
-	printf("pt2 is (%d, %d)\n", pp2->x, pp2->y);
+    printf("pt1 is (%d, %d)\n", pp1->x, pp1->y);
+    printf("pt2 is (%d, %d)\n", pp2->x, pp2->y);
 
-	struct rectangle rec = makeRec(pp1, pp2);
+    struct rectangle rec = makeRec(pp1, pp2);
 
-	printf("Some point is (%d, %d)\nThe other point is (%d, %d)\n", 
-		rec.pt1.x, rec.pt1.y, rec.pt2.x, rec.pt2.y);
+    printf("Some point is (%d, %d)\nThe other point is (%d, %d)\n", 
+        rec.pt1.x, rec.pt1.y, rec.pt2.x, rec.pt2.y);
 
-	return 0;
+    return 0;
 }
 ```
 - One interesting bit from the book this final example. Suppose we have the following declaration:
@@ -217,14 +217,14 @@ rp->pt1.x
 - Consider the following declaration:
 ```c
 struct {
-	int len;
-	char *str;
+    int len;
+    char *str;
 } *p;
 ```
 - Based on such a declaration
-	- **`++p->len`** is equivalent to **`++(p->len)`**. It increments len because `len` is very tightly bound to `p` due to high **`->`** precedence.
-	- **`(++p)->len`** increments `p` before accessing `len`.
-	- **`*p->str`** is equivalent to **`*(p->str)`**. Since **`str`** is a pointer, this expression dereferences it.
+    - **`++p->len`** is equivalent to **`++(p->len)`**. It increments len because `len` is very tightly bound to `p` due to high **`->`** precedence.
+    - **`(++p)->len`** increments `p` before accessing `len`.
+    - **`*p->str`** is equivalent to **`*(p->str)`**. Since **`str`** is a pointer, this expression dereferences it.
 - *Whatever, the last paragraph was more confusing than anything!!!*
 
 ## Arrays of Structures:
@@ -234,16 +234,16 @@ struct {
 #define NKWORDS 1000
 
 struct keyword {
-	char *word;
-	int count;
+    char *word;
+    int count;
 } keywords[NKWORDS];
 ```
 - There is a lot going on in the definition above. We are defining both a structure tagged as `keyword` and an array `keywords[]`of structures of type `keyword`, meaning that the definition above can be expanded into two parts: 1) Declaring the structure `keyword`, and 2) defining an array `keywords[]` containing `NKWORDS` `keyword` structures:
 
 ```c
 struct keyword {
-	char *word;
-	int count;
+    char *word;
+    int count;
 };
 
 struct keyword keywords[NKWORDS];
@@ -251,27 +251,27 @@ struct keyword keywords[NKWORDS];
 - What's even cooler is that you can initialize such arrays with a literal as in:
 ```c
 struct keyword {
-	char *word;
-	int count;
+    char *word;
+    int count;
 } keywords[] = {
-	{"char", 0},
-	{"auto", 0},
-	{"register", 0},
-	/* ... */
-	{"comatose", 0}
+    {"char", 0},
+    {"auto", 0},
+    {"register", 0},
+    /* ... */
+    {"comatose", 0}
 };
 ```
 - The inner braces in the initializing literal are not always necessary, especially when the stricture consists of a few  simple types or character strings. This definition, then, can be written as:
 ```c
 struct keyword {
-	char *word;
-	int count;
+    char *word;
+    int count;
 } keywords[] = {
-	"char", 0,
-	"auto", 0,
-	"register", 0,
-	/* ... */
-	"comatose", 0
+    "char", 0,
+    "auto", 0,
+    "register", 0,
+    /* ... */
+    "comatose", 0
 };
 ```
 - Accessing these structures in the array and their members is also a cake. A given structure in the array can be accessed by its index in the array. The following assignment copies the contents of `keywords[0]` to the struct `charact`
@@ -312,16 +312,158 @@ int mid = low + (high - low).
 - Another issue that I've been wondering about is that the size of a structure is not determined by the size of data types it contains but is rather determined by number of elements multiplied by the largest data size it contains. This is an *alignment* issue (see our notes on computer systems).
 ```c
 struct fafa {
-	char a;
-	int zaza;
+    char a;
+    int zaza;
 };
 ```
 - The structure above has a size 8 bytes instead of 5 (at least in x86-64).
 
 ## Self-referential Structures:
-- *This section delves a bit into data structures, mainly linked lists and binary search trees. I'll mostly focus on the C syntax and its usage. I believe it contains some discussion about memory management*.
+- *This section delves a bit into data structures, mainly binary search trees. I'll mostly focus on the C syntax and its usage. I believe it contains some useful discussion of memory management*.
+- An important issue is that a structure cannot include an instance of itself. However, a structure can have a reference to itself (or to a structure of the same time). This is done with a pointer to a structure of the same type. The definition of a tree representing a binary search tree can be done as follows:
+```c
+struct tnode {
+    char *data;
+    struct tnode *left;
+    struct tnode *right;
+
+};
+```
+- The book also mentions that you can also have two different structures having references to each other as in:
+```c
+struct t {
+    struct s *p;
+};
+
+struct s {
+    struct t *p;
+}
+```
+
+### A Naive Linked-List Implementation:
+```c
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+struct wawa {
+    char *data;
+    struct wawa *next;
+};
+
+struct wawa *insert(struct wawa *p, char *data){
+    if (p == NULL){
+        p = (struct wawa *) malloc (sizeof (struct wawa));
+        p->data = strdup(data);
+        p->next = NULL;
+    } 
+    else {
+        p->next = insert(p->next, data);
+    }
+    return p;
+}
+
+int main(){
+    struct wawa *w1 = NULL;
+    w1 = insert(w1, "a");
+    w1 = insert(w1, "b");
+    w1 = insert(w1, "c");
+    while (w1->next != NULL){
+        printf("%s -> ", w1->data);
+        w1 = w1->next;
+    }
+    printf("%s\n", "NULL");
+    printf("\n");
+}
+```
+- I did this based on the binary search tree presented in the book. I had a hard time doing this because of my complete lack of understanding of how and when to use `malloc`. This could've been more robust. For example, insert needs to be able to handle both a `NULL` and non-`NULL` head of list.
+- Pay special attention to the use of `malloc` in this line:
+```c
+p = (struct wawa *) malloc (sizeof (struct wawa));
+```
+- Here `malloc` is coerced to return the appropriate type of pointer.
+- **`strdup`** comes from the `string.h` header. Its definition (at least back then) is:
+```c
+#include <stdlib.h>
+
+char *strdup(char *s){
+    char *p;
+    p = (char *) malloc(strlen(s) + 1); // 1 is for '\0'
+    if (p != NULL)
+        strcpy(p, s);
+
+    return p;
+}
+```
 
 ## Table Lookup:
+- This section goes on about creating hash map. It should mostly be self explanatory. I am amazed by the terse and simple code, so I am going to steal it:
+```c
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+struct nlist {
+    struct nlist *next;
+    char *name;
+    char *defn;
+};
+
+#define HASHSIZE 101
+static struct nlist *hashtable[HASHSIZE];
+
+unsigned hash(char *s){
+    unsigned hshVal;
+
+    for (hshVal = 0; *s != '\0'; s++){
+        hshVal = *s + 31 * hshVal;
+    }
+
+    return hshVal % HASHSIZE;
+}
+
+struct nlist *lookup(char *s){
+    struct nlist *np;
+
+    for (np = hashtable[hash(s)]; np != NULL; np = np->next)
+        if (strcmp(s, np->name) == 0)
+            return np;
+
+    return NULL;
+}
+
+struct nlist *install(char *name, char *defn){
+    struct nlist *np;
+    unsigned hshVal;
+
+    if ((np = lookup(name)) == NULL){
+        np = (struct nlist *) malloc(sizeof (*np));
+
+        if (np == NULL || (np->name = strdup(name)) == NULL)
+            return NULL;
+        hshVal = hash(name);
+        np->next = hashtable[hshVal];
+        hashtable[hshVal] = np;
+    } else {
+        free((void *) np->defn);
+
+    }
+    if ((np->defn = strdup(defn)) == NULL)
+        return NULL;
+
+    return np;
+}
+
+int main(){
+    install("potato", "There is potato blood in my veins!");
+    install("n", "ana nehlom bel'patata!");
+    install("Michael", "Michael tal patata, patata t ensab d demmou!");
+    printf("%s\n", (lookup("potato"))->defn);
+    printf("%s\n", (lookup("n"))->defn);
+    printf("%s\n", (lookup("Michael"))->defn);
+}
+```
+
 ## `typedef`:
 ## Unions:
 ## Bit-fields:

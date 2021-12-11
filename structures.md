@@ -465,5 +465,47 @@ int main(){
 ```
 
 ## `typedef`:
+```c
+typedef char *String;
+```
+- The statement above is a curious one. The use of **`typedef`** in this statement makes `String` an equivalent to `char *`. Next time of using `char *` to declare a char pointer, you can simply use `String` as in:
+```c
+String a = "Sacré bleu, where is me mamma!?";
+// Same as:
+// char *a = "Sacré bleu, where is me mamma!?";
+```
+- Pay special attention to the fact that name you define with `typedef` comes after the actual type it represents rather than right after the keyword `typedef`.
+- The use of `typedef` becomes even a sweeter kind of syntactic sugar when used with structures as in:
+```c
+struct nlist {
+    struct nlist *next;
+    char *name;
+    char *defn;
+} TreeNode;
+```
+- Nex time you need to use `nlist`, you can simply use `TreeNode` instead of the clumsy `struct nlist`. The definition of `lookup` from the previous section becomes:
+```c
+TreeNode *lookup(char *s){
+    TreeNode *np;
+    /* ... */
+    return NULL;
+}
+```
+- `typedef` doesn't create new types, but merely provides better readability especially with structures. It's kinda similar to `#define` but does more (*and I won't care unless I see a compelling reason in the future*)! 
+- The use of `typedef` has two more important uses:
+	- It helps with portability because there some types that are machine independent. The standard library uses `typedef` to create types like `size_t` which work across different architectures.
+	- It's good for documentation as you can now give your structures and pointers meaningful names like `TreeNode` or `TreePointer`.
+
 ## Unions:
-## Bit-fields:
+- The *raison d'être*  of **unions** is similar to that of generics in Java and C#. It allows one value to be represented in different sizes or as different types. It is basically "a variable that may hold (at different times) objects of different types and sizes, with the compiler keeping track of size and alignment requirements". 
+- A union will be able to morph from one type to another depending on the context. I believe this behavior provides some flexibility against the static nature of C.
+- The following snippet shows the syntax of a union. It looks identical to a structure:
+```c
+union u_tag {
+	int ival;
+	float fval;
+	char *sval;
+} u;
+```
+- The value of the union, is the value of the most recently assigned type. 
+- Unions are a special type of structure where all members have "offset zero from the base".

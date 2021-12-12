@@ -1,4 +1,22 @@
 # Structures:
+* [Introduction](#introduction)
+* [Basics of Structures](#basics-of-structures)
+    + [Creating Variables of Tagged Structures and Structure Initialization](#creating-variables-of-tagged-structures-and-structure-initialization)
+    + [Nested Structures](#nested-structures)
+* [Structure Legal Operations](#structure-legal-operations)
+* [Structures and Functions](#structures-and-functions)
+    + [Pass Components Separately](#pass-components-separately)
+    + [Pass Entire Structures](#pass-entire-structures)
+    + [Pass Pointer to Structure](#pass-pointer-to-structure)
+* [Arrays of Structures](#arrays-of-structures)
+    + [`sizeof`](#sizeof)
+* [Pointers to Structures](#pointers-to-structures)
+* [Self-referential Structures](#self-referential-structures)
+    + [A Naive Linked-List Implementation](#a-naive-linked-list-implementation)
+* [Table Lookup](#table-lookup)
+* [`typedef`](#typedef)
+* [Unions](#unions)
+
 ## Introduction:
 - A **structure** can be defined as "a collection of one or more, possibly of different types, grouped together under a single name for convenient handling." *Couldn't be said better!!* They allow for better organization of large programs because they allow you to treat groups of related data as as single units. 
 - A structure is basically like an object in OOP languages (of course, minus all the OOP goop like inheritance, etc.). It allows you for example to define a person by name, address, age, purchases,etc. Structures can also have some of their fields as structures, too, so the name field's value would be a structure that has a first, middle, and a last name, for example. 
